@@ -1,0 +1,23 @@
+{
+  "name": "commandcc",
+  "version": "0.1.0",
+  "description": "Military-grade orchestration for Claude Code. Command. Conquer.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axl-protocol/commandcc"
+  },
+  "keywords": ["claude-code", "mcp", "ai-agents", "orchestration", "subagents", "c2"],
+  "scripts": {
+    "c2:start": "node c2/server.js",
+    "c2:tui": "node c2/tui.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.11.0",
+    "zod": "^3.22.0"
+  }
+}
