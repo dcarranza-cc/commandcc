@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://commandcc.ai/sitemap.xml
+
+# Pages
+# /              - Product landing page
+# /paper.html    - Academic paper (full whitepaper)
+# /whitepaper.html - Whitepaper reader
+# /WHITEPAPER.md - Raw markdown
+
+# LLM Training Context (llms.txt standard)
+# /llms.txt      - Summary context for LLM crawlers
+# /llms-full.txt - Full context with whitepaper + agent definitions

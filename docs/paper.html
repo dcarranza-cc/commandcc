@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration</title>
+  <meta name="description" content="We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts.">
+  <meta name="keywords" content="AI agent orchestration, multi-agent systems, Claude Code, parallel execution, LLM coordination, command and control, file-based coordination, decomposer pattern, subagent management, quantumized execution">
+  <meta name="author" content="Diego Carranza">
+  <link rel="canonical" href="https://commandcc.ai/paper.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
+  <meta property="og:description" content="We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces a three-tier agent hierarchy, the Decomposer pattern, and a file-based coordination protocol that eliminates inter-agent message passing.">
+  <meta property="og:url" content="https://commandcc.ai/paper.html">
+  <meta property="og:site_name" content="CommandCC">
+  <meta property="article:published_time" content="2026-04-02">
+  <meta property="article:author" content="Diego Carranza">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
+  <meta name="twitter:description" content="CommandCC: 16 to 128 AI agents from one terminal. Three-tier hierarchy, automated decomposition, file-based coordination. 16 agents, 4 features, 131 tests, 13 minutes.">
+
+  <!-- Google Scholar / Citation meta tags -->
+  <meta name="citation_title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
+  <meta name="citation_author" content="Carranza, Diego">
+  <meta name="citation_date" content="2026/04/02">
+  <meta name="citation_pdf_url" content="https://commandcc.ai/paper.html">
+  <meta name="citation_abstract_html_url" content="https://commandcc.ai/paper.html">
+  <meta name="citation_publisher" content="AXL Protocol">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "name": "Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration",
+    "headline": "Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration",
+    "author": {
+      "@type": "Person",
+      "name": "Diego Carranza",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "AXL Protocol Research"
+      }
+    },
+    "datePublished": "2026-04-02",
+    "publisher": {
+      "@type": "Organization",
+      "name": "AXL Protocol"
+    },
+    "abstract": "We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts. In our validation operation (OPBLITZ3), one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes of wall-clock time, representing an estimated 200x reduction in human cognitive load compared to sequential implementation.",
+    "keywords": [
+      "AI agent orchestration",
+      "multi-agent systems",
+      "Claude Code",
+      "parallel execution",
+      "LLM coordination",
+      "command and control",
+      "file-based coordination",
+      "decomposer pattern",
+      "subagent management",
+      "quantumized execution"
+    ],
+    "url": "https://commandcc.ai/paper.html",
+    "inLanguage": "en"
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Source+Sans+3:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      --paper-white: #ffffff;
+      --page-bg: #f0ede8;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444444;
+      --text-muted: #777777;
+      --text-light: #999999;
+      --border-light: #e0ddd8;
+      --border-medium: #c8c4be;
+      --accent-blue: #1a4f8a;
+      --accent-blue-light: #2563a8;
+      --accent-rule: #3a6ea5;
+      --code-bg: #f5f4f2;
+      --code-border: #dddad6;
+      --table-head-bg: #f0ede8;
+      --table-stripe: #f8f7f5;
+      --banner-bg: #1c2b3a;
+      --banner-text: #d4dde8;
+      --banner-link: #7eb8e8;
+      --banner-link-hover: #aad4f5;
+      --toc-bg: #faf9f7;
+      --toc-border: #e0ddd8;
+      --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+      --sans: 'Source Sans 3', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      --mono: 'Source Code Pro', 'Consolas', 'Monaco', 'Courier New', monospace;
+      --content-width: 720px;
+      --sidebar-width: 240px;
+      --gap: 40px;
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    /* ===== TOP BANNER ===== */
+    #top-banner {
+      background: var(--banner-bg);
+      color: var(--banner-text);
+      padding: 0.6rem 1.5rem;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid #2e4560;
+    }
+
+    #top-banner .banner-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #top-banner .banner-logo {
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    #top-banner .banner-sep {
+      color: #4a6580;
+    }
+
+    #top-banner .banner-tagline {
+      color: var(--banner-text);
+      opacity: 0.7;
+    }
+
+    #top-banner .banner-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    #top-banner .banner-links a {
+      color: var(--banner-link);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.15s;
+    }
+
+    #top-banner .banner-links a:hover {
+      color: var(--banner-link-hover);
+    }
+
+    /* ===== PAGE LAYOUT ===== */
+    body {
+      background: var(--page-bg);
+      color: var(--text-primary);
+      font-family: var(--serif);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    #layout {
+      display: flex;
+      max-width: calc(var(--content-width) + var(--sidebar-width) + var(--gap) + 80px);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      gap: var(--gap);
+      align-items: flex-start;
+    }
+
+    /* ===== SIDEBAR TOC ===== */
+    #toc-sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(2.5rem + 40px);
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      background: var(--toc-bg);
+      border: 1px solid var(--toc-border);
+      border-radius: 4px;
+      padding: 1.1rem 1rem;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      line-height: 1.5;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-medium) transparent;
+    }
+
+    #toc-sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #toc-sidebar::-webkit-scrollbar-thumb {
+      background: var(--border-medium);
+      border-radius: 2px;
+    }
+
+    #toc-sidebar h2 {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--toc-border);
+    }
+
+    #toc-sidebar ul {
+      list-style: none;
+    }
+
+    #toc-sidebar ul ul {
+      padding-left: 0.9rem;
+      margin-top: 0.1rem;
+    }
+
+    #toc-sidebar li {
+      margin-bottom: 0.15rem;
+    }
+
+    #toc-sidebar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: block;
+      padding: 0.12rem 0;
+      border-radius: 2px;
+      transition: color 0.15s;
+    }
+
+    #toc-sidebar a:hover {
+      color: var(--accent-blue);
+    }
+
+    #toc-sidebar a.toc-active {
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    #toc-sidebar .toc-section {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.78rem;
+    }
+
+    #toc-sidebar .toc-subsection {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== PAPER CONTAINER ===== */
+    #paper-container {
+      flex: 1;
+      min-width: 0;
+      max-width: var(--content-width);
+    }
+
+    /* ===== PAPER CHROME ===== */
+    #paper-wrapper {
+      background: var(--paper-white);
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.08),
+        0 4px 16px rgba(0,0,0,0.10),
+        0 8px 40px rgba(0,0,0,0.08);
+      border-radius: 3px;
+    }
+
+    /* ===== PAPER CONTENT ===== */
+    #paper-body {
+      padding: 72px 80px 60px;
+    }
+
+    /* ===== TYPOGRAPHY: PAPER HEADER ===== */
+    #paper-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--text-primary);
+    }
+
+    #paper-header .paper-title {
+      font-family: var(--sans);
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    #paper-header .paper-author {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    #paper-header .paper-affiliation {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    #paper-header .paper-date {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    #paper-header .paper-contact {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    #paper-header .paper-contact a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    /* ===== ABSTRACT ===== */
+    #abstract-section {
+      margin-bottom: 2.5rem;
+      padding: 0;
+    }
+
+    #abstract-section .abstract-label {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .abstract-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      column-gap: 2rem;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      text-align: justify;
+      border-top: 1px solid var(--border-medium);
+      border-bottom: 1px solid var(--border-medium);
+      padding: 1rem 0;
+    }
+
+    .abstract-columns .abstract-text {
+      column-count: 1;
+    }
+
+    /* ===== SECTION HEADINGS ===== */
+    #paper-rendered h1 {
+      display: none; /* Title is in the header, not rendered inline */
+    }
+
+    #paper-rendered h2 {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 2.8rem;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--border-light);
+      counter-increment: none;
+      letter-spacing: -0.01em;
+    }
+
+    #paper-rendered h3 {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 1.8rem;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.005em;
+    }
+
+    #paper-rendered h4 {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ===== BODY TEXT ===== */
+    #paper-rendered p {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 0.9rem;
+      text-align: justify;
+      hyphens: auto;
+      color: var(--text-primary);
+    }
+
+    #paper-rendered > p:first-of-type::first-letter {
+      /* No drop cap, keep it clean */
+    }
+
+    /* ===== EMPHASIS ===== */
+    #paper-rendered strong {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    #paper-rendered em {
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    /* ===== LISTS ===== */
+    #paper-rendered ol,
+    #paper-rendered ul {
+      margin: 0.6rem 0 1rem 1.6rem;
+      font-size: 0.93rem;
+    }
+
+    #paper-rendered li {
+      margin-bottom: 0.35rem;
+      line-height: 1.65;
+    }
+
+    #paper-rendered li p {
+      margin-bottom: 0.2rem;
+    }
+
+    /* ===== CODE ===== */
+    #paper-rendered code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 2px;
+      padding: 0.1em 0.35em;
+      color: #2d3748;
+    }
+
+    #paper-rendered pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 3px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 1.2rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    #paper-rendered pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    /* ===== TABLES (LaTeX-style) ===== */
+    #paper-rendered table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    #paper-rendered thead {
+      border-top: 2px solid var(--text-primary);
+      border-bottom: 1px solid var(--text-primary);
+    }
+
+    #paper-rendered th {
+      text-align: left;
+      font-weight: 600;
+      padding: 0.45rem 0.75rem;
+      color: var(--text-primary);
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    #paper-rendered td {
+      padding: 0.4rem 0.75rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    #paper-rendered tr:last-child td {
+      border-bottom: none;
+    }
+
+    #paper-rendered tbody tr:nth-child(even) td {
+      background: var(--table-stripe);
+    }
+
+    #paper-rendered tfoot {
+      border-top: 1px solid var(--text-primary);
+    }
+
+    /* Add bottom border to last row of table */
+    #paper-rendered table {
+      border-bottom: 2px solid var(--text-primary);
+    }
+
+    /* Table caption */
+    .table-caption {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: -0.8rem;
+      margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+
+    /* ===== HORIZONTAL RULES ===== */
+    #paper-rendered hr {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 2.5rem 0;
+    }
+
+    /* ===== BLOCKQUOTES ===== */
+    #paper-rendered blockquote {
+      border-left: 3px solid var(--accent-rule);
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      background: #f7f6f4;
+    }
+
+    /* ===== LINKS ===== */
+    #paper-rendered a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    #paper-rendered a:hover {
+      border-bottom-color: var(--accent-blue);
+    }
+
+    /* ===== CITE THIS PAPER ===== */
+    #cite-section {
+      background: var(--paper-white);
+      border-top: 2px solid var(--border-light);
+      padding: 2rem 80px 2.5rem;
+    }
+
+    #cite-section h2 {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .cite-formats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .cite-format-block {
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .cite-format-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.8rem;
+      background: var(--table-head-bg);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .cite-format-label {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .cite-copy-btn {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      background: transparent;
+      border: 1px solid var(--accent-blue);
+      border-radius: 3px;
+      padding: 0.2rem 0.6rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .cite-copy-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .cite-copy-btn.copied {
+      background: #2e7d32;
+      border-color: #2e7d32;
+      color: white;
+    }
+
+    .cite-text {
+      padding: 0.8rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      background: #fdfcfb;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .cite-apa {
+      font-family: var(--serif);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      padding: 0.8rem;
+      color: var(--text-secondary);
+      background: #fdfcfb;
+    }
+
+    /* ===== PAGE FOOTER ===== */
+    #page-footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    #page-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    #page-footer a:hover {
+      color: var(--accent-blue);
+    }
+
+    /* ===== LOADING STATE ===== */
+    #loading-state {
+      padding: 4rem 2rem;
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== PRINT STYLESHEET ===== */
+    @media print {
+      #top-banner,
+      #toc-sidebar,
+      #cite-section,
+      #page-footer {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        font-size: 10.5pt;
+      }
+
+      #layout {
+        display: block;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      #paper-container {
+        max-width: 100%;
+      }
+
+      #paper-wrapper {
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      #paper-body {
+        padding: 1.5cm 2cm 2cm;
+      }
+
+      #paper-rendered h2 {
+        page-break-after: avoid;
+        margin-top: 1.8rem;
+      }
+
+      #paper-rendered h3 {
+        page-break-after: avoid;
+      }
+
+      #paper-rendered pre,
+      #paper-rendered table {
+        page-break-inside: avoid;
+      }
+
+      #paper-rendered p {
+        font-size: 10.5pt;
+        line-height: 1.65;
+        text-align: justify;
+        orphans: 3;
+        widows: 3;
+      }
+
+      #paper-rendered a {
+        color: inherit;
+        border: none;
+      }
+
+      .abstract-columns {
+        font-size: 9.5pt;
+      }
+
+      #paper-header .paper-title {
+        font-size: 16pt;
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      :root {
+        --sidebar-width: 200px;
+        --gap: 28px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      #toc-sidebar {
+        display: none;
+      }
+
+      #layout {
+        display: block;
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      #paper-container {
+        max-width: 100%;
+      }
+
+      #paper-body {
+        padding: 2.5rem 2rem 2rem;
+      }
+
+      #cite-section {
+        padding: 1.5rem 2rem 2rem;
+      }
+
+      .cite-formats {
+        grid-template-columns: 1fr;
+      }
+
+      .abstract-columns {
+        grid-template-columns: 1fr;
+      }
+
+      #paper-header .paper-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #top-banner .banner-tagline {
+        display: none;
+      }
+
+      #paper-body {
+        padding: 2rem 1.25rem 1.5rem;
+      }
+
+      #cite-section {
+        padding: 1.5rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Banner -->
+<div id="top-banner">
+  <div class="banner-left">
+    <a href="https://commandcc.ai" class="banner-logo">COMMANDCC</a>
+    <span class="banner-sep">/</span>
+    <span class="banner-tagline">Command Claude Code. Conquer.</span>
+  </div>
+  <div class="banner-links">
+    <a href="https://commandcc.ai">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a href="whitepaper.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Whitepaper
+    </a>
+  </div>
+</div>
+
+<!-- Page Layout -->
+<div id="layout">
+
+  <!-- Sidebar TOC -->
+  <nav id="toc-sidebar" aria-label="Table of contents">
+    <h2>Contents</h2>
+    <ul id="toc-list">
+      <!-- Populated by JS -->
+    </ul>
+  </nav>
+
+  <!-- Paper Container -->
+  <main id="paper-container">
+    <article id="paper-wrapper" itemscope itemtype="https://schema.org/ScholarlyArticle">
+
+      <div id="paper-body">
+
+        <!-- Static paper header (always shown, never from markdown) -->
+        <header id="paper-header">
+          <h1 class="paper-title" itemprop="name">
+            Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration
+          </h1>
+          <div class="paper-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+            <span itemprop="name">Diego Carranza</span>
+          </div>
+          <div class="paper-affiliation">AXL Protocol Research</div>
+          <div class="paper-date">
+            <time itemprop="datePublished" datetime="2026-04-02">April 2026</time>
+          </div>
+          <div class="paper-contact">
+            <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">github.com/dcarranza-cc/commandcc</a>
+          </div>
+        </header>
+
+        <!-- Abstract (two-column) -->
+        <section id="abstract-section" aria-labelledby="abstract-label">
+          <div class="abstract-label" id="abstract-label">Abstract</div>
+          <div class="abstract-columns" itemprop="description">
+            <div class="abstract-text">
+              We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts.
+            </div>
+            <div class="abstract-text">
+              In our validation operation (OPBLITZ3), one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes of wall-clock time, representing an estimated 200x reduction in human cognitive load compared to sequential implementation. We report the architecture, the coordination protocol, the decomposition algorithm, and the empirical results from the first field deployment.
+            </div>
+          </div>
+        </section>
+
+        <!-- Paper body (rendered from markdown) -->
+        <section id="paper-rendered">
+          <div id="loading-state">Loading paper&hellip;</div>
+        </section>
+
+      </div><!-- /#paper-body -->
+
+      <!-- Cite This Paper -->
+      <div id="cite-section">
+        <h2>Cite This Paper</h2>
+        <div class="cite-formats">
+
+          <div class="cite-format-block">
+            <div class="cite-format-header">
+              <span class="cite-format-label">BibTeX</span>
+              <button class="cite-copy-btn" data-target="cite-bibtex">Copy</button>
+            </div>
+            <div class="cite-text" id="cite-bibtex">@article{carranza2026quantumized,
+  title   = {Quantumized Execution: A File-Based Coordination
+             Protocol for Massively Parallel AI Agent Orchestration},
+  author  = {Carranza, Diego},
+  year    = {2026},
+  month   = {April},
+  publisher = {AXL Protocol},
+  url     = {https://commandcc.ai/paper.html}
+}</div>
+          </div>
+
+          <div class="cite-format-block">
+            <div class="cite-format-header">
+              <span class="cite-format-label">APA</span>
+              <button class="cite-copy-btn" data-target="cite-apa">Copy</button>
+            </div>
+            <div class="cite-apa" id="cite-apa">Carranza, D. (2026). Quantumized execution: A file-based coordination protocol for massively parallel AI agent orchestration. AXL Protocol. https://commandcc.ai/paper.html</div>
+          </div>
+
+        </div>
+      </div>
+
+    </article><!-- /#paper-wrapper -->
+
+    <footer id="page-footer">
+      <p>
+        &copy; 2026 Diego Carranza, AXL Protocol &nbsp;&middot;&nbsp;
+        Apache 2.0 License &nbsp;&middot;&nbsp;
+        <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">GitHub</a>
+        &nbsp;&middot;&nbsp;
+        <a href="https://commandcc.ai">commandcc.ai</a>
+      </p>
+    </footer>
+
+  </main><!-- /#paper-container -->
+
+</div><!-- /#layout -->
+
+<!-- marked.js for Markdown rendering -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  /* ===== MARKDOWN LOADING ===== */
+  async function loadPaper() {
+    const container = document.getElementById('paper-rendered');
+    const loading = document.getElementById('loading-state');
+
+    const paths = [
+      '../WHITEPAPER.md',
+      'https://raw.githubusercontent.com/dcarranza-cc/commandcc/main/WHITEPAPER.md'
+    ];
+
+    let md = null;
+    for (const path of paths) {
+      try {
+        const res = await fetch(path);
+        if (res.ok) {
+          md = await res.text();
+          break;
+        }
+      } catch (e) { /* try next source */ }
+    }
+
+    if (!md) {
+      loading.innerHTML =
+        'Could not load paper content. ' +
+        '<a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md">Read on GitHub</a>.';
+      return;
+    }
+
+    // Strip the H1 title, author block, and abstract from the markdown,
+    // since we have a static styled header + abstract block above.
+    // The markdown starts with H1, then author lines, then the abstract paragraph,
+    // then the first HR, then section 1.
+    // We remove everything up to and including the first HR.
+    const firstHr = md.indexOf('\n---\n');
+    if (firstHr !== -1) {
+      md = md.slice(firstHr + 5); // skip past the first HR
+    }
+
+    marked.setOptions({
+      gfm: true,
+      breaks: false
+    });
+
+    // Use marked with a custom renderer to add IDs to headings for TOC
+    const renderer = new marked.Renderer();
+
+    renderer.heading = function(text, level) {
+      // Strip any HTML tags to get plain text for ID generation
+      const plainText = text.replace(/<[^>]+>/g, '');
+      const id = 'sec-' + plainText
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      return '<h' + level + ' id="' + id + '">' + text + '</h' + level + '>\n';
+    };
+
+    marked.use({ renderer });
+
+    container.innerHTML = marked.parse(md);
+    loading.remove();
+
+    buildTOC();
+    initScrollSpy();
+  }
+
+  /* ===== TABLE OF CONTENTS BUILDER ===== */
+  function buildTOC() {
+    const tocList = document.getElementById('toc-list');
+    const rendered = document.getElementById('paper-rendered');
+    const headings = rendered.querySelectorAll('h2, h3');
+
+    if (!headings.length) return;
+
+    let currentSection = null;
+    let currentSubList = null;
+
+    headings.forEach(function(h) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+
+      if (h.tagName === 'H2') {
+        a.className = 'toc-section';
+        li.appendChild(a);
+        currentSubList = document.createElement('ul');
+        li.appendChild(currentSubList);
+        tocList.appendChild(li);
+        currentSection = li;
+      } else if (h.tagName === 'H3') {
+        a.className = 'toc-subsection';
+        li.appendChild(a);
+        if (currentSubList) {
+          currentSubList.appendChild(li);
+        } else {
+          tocList.appendChild(li);
+        }
+      }
+    });
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const rendered = document.getElementById('paper-rendered');
+    const headings = Array.from(rendered.querySelectorAll('h2, h3'));
+    const tocLinks = document.querySelectorAll('#toc-sidebar a');
+
+    if (!headings.length || !tocLinks.length) return;
+
+    const bannerHeight = document.getElementById('top-banner').offsetHeight;
+
+    function onScroll() {
+      let current = null;
+      const scrollY = window.scrollY + bannerHeight + 32;
+
+      for (let i = headings.length - 1; i >= 0; i--) {
+        if (headings[i].getBoundingClientRect().top + window.scrollY <= scrollY) {
+          current = headings[i].id;
+          break;
+        }
+      }
+
+      tocLinks.forEach(function(link) {
+        link.classList.toggle('toc-active', link.getAttribute('href') === '#' + current);
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ===== COPY BUTTONS ===== */
+  function initCopyButtons() {
+    document.querySelectorAll('.cite-copy-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const targetId = btn.getAttribute('data-target');
+        const el = document.getElementById(targetId);
+        if (!el) return;
+
+        const text = el.textContent;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function() {
+            showCopied(btn);
+          }).catch(function() {
+            fallbackCopy(text, btn);
+          });
+        } else {
+          fallbackCopy(text, btn);
+        }
+      });
+    });
+  }
+
+  function fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showCopied(btn);
+    } catch (e) { /* silent fail */ }
+    document.body.removeChild(ta);
+  }
+
+  function showCopied(btn) {
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+
+  /* ===== INIT ===== */
+  document.addEventListener('DOMContentLoaded', function() {
+    initCopyButtons();
+    loadPaper();
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+# CommandCC
+
+> Command Claude Code. Conquer. Military-grade orchestration for Claude Code that lets one human command 16-128 AI agents from a single terminal.
+
+CommandCC is an open-source system for massively parallel AI agent orchestration. It introduces three key innovations: a three-tier agent hierarchy (Opus for strategy, Sonnet for building, Haiku for recon), the Decomposer pattern that automatically splits human objectives into independent parallel work streams, and a file-based coordination protocol that eliminates inter-agent message passing.
+
+## Proof
+
+In Operation OPBLITZ3, one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes, a 200x reduction in human cognitive load.
+
+## Links
+
+- Website: https://commandcc.ai
+- Academic Paper: https://commandcc.ai/paper.html
+- Whitepaper (Markdown): https://commandcc.ai/WHITEPAPER.md
+- Full LLM Context: https://commandcc.ai/llms-full.txt
+- GitHub: https://github.com/dcarranza-cc/commandcc
+- Getting Started: https://github.com/dcarranza-cc/commandcc/blob/main/docs/getting-started.md

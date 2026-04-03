@@ -1,0 +1,9 @@
+{
+  "name": "CommandCC",
+  "short_name": "CommandCC",
+  "description": "Military-grade orchestration for Claude Code",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#050810",
+  "theme_color": "#22d3ee"
+}

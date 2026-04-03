@@ -1,0 +1,977 @@
+# CommandCC - Full LLM Context
+
+> Command Claude Code. Conquer. Military-grade orchestration for Claude Code.
+> Website: https://commandcc.ai | GitHub: https://github.com/dcarranza-cc/commandcc
+> Author: Diego Carranza, AXL Protocol Research, April 2026
+> License: Apache 2.0
+
+---
+
+## Overview
+
+CommandCC is an open-source system for massively parallel AI agent orchestration using Claude Code. One human operator types 4 objective sentences and the system deploys 60+ specialized AI agents working in parallel across 9 sequential phases, completing in approximately 22 minutes what would take 12-16 hours sequentially.
+
+### Key Innovations
+
+1. THREE-TIER AGENT HIERARCHY: Opus-class agents (expensive) handle strategy, architecture, and review but never write code. Sonnet-class agents (mid-range) handle building, wiring, and testing with full write access. Haiku-class agents (cheap) handle fast reconnaissance and scanning with read-only access.
+
+2. THE DECOMPOSER: An Opus-class agent that sits between strategy and architecture. It reads high-level objectives and automatically breaks each into 2-4 independent sub-objectives suitable for parallel execution. Independence is the key constraint: no sub-objective can depend on another's output. This converts 4 human sentences into 12-16 parallel work streams, each getting its own architect, builder, tester, and reviewer chain. Total: 60+ agents from 4 lines of input.
+
+3. FILE-BASED COORDINATION: Agents coordinate through shared filesystem artifacts, not message passing. Each phase produces files (OPERATION-PLAN.md, DECOMPOSITION.md, ARCHITECTURE-*.md, BUILD-NOTES-*.md, etc.) that become inputs to the next phase. Phase sequencing guarantees ordering without explicit synchronization.
+
+### The Nine-Phase Octopus Pattern
+
+Phase 0 RECON: 4-8 Haiku scouts scan codebase simultaneously (30 seconds)
+Phase 1 STRATEGY: 1 Opus strategist produces OPERATION-PLAN.md (2 minutes)
+Phase 2 DECOMPOSE: 1 Opus decomposer produces DECOMPOSITION.md, the multiplication step (2 minutes)
+Phase 3 ARCHITECTURE: N Opus architects design per sub-objective (3 minutes)
+Phase 4 BUILD: N Sonnet builders implement per sub-objective (5 minutes)
+Phase 5 WIRE: N Sonnet integrators resolve cross-file conflicts per objective (3 minutes)
+Phase 6 TEST: N Sonnet testers write and run tests per sub-objective (3 minutes)
+Phase 7 REVIEW: N Opus reviewers verify per objective (2 minutes)
+Phase 8 INTEGRATION: 1 Opus integrator produces BATTLE-MAP.md (2 minutes)
+
+### Empirical Results (Operation OPBLITZ3)
+
+- Human input: 4 sentences (objectives)
+- Agents deployed: 16
+- Features implemented: 4
+- Tests written and passing: 131/131
+- Wall clock time: 13 minutes
+- Sequential estimate: 4-6 hours
+- Cognitive load compression: 200x
+
+### Pre-Built Components
+
+27 agent definitions across 7 categories: command (strategist, decomposer, integrator), architect (system, security, data, API), builder (backend, frontend, API, database, infrastructure), wirer (import, config, startup), tester (unit, integration, security, load), reviewer (code, security, architecture, compliance), scout (file scanner, dependency checker, log analyzer, health checker).
+
+9 operation templates: feature-deploy (flagship), feature-deploy-lite, security-audit, codebase-migration, research-sprint, test-blitz, documentation-sprint, refactor-sweep, incident-response.
+
+### C2 Server (Optional, for Multi-Server Fleets)
+
+REST API on port 9090 with filesystem storage. Orders flow DOWN (OPORD, FRAGO, Broadcast). Reports flow UP (SITREP, INTREP, SPOTREP, REQUEST). Handoffs flow LATERAL between peer units. Includes MCP server with 6 tools for Claude Code integration and a terminal UI (blessed) for the human operator.
+
+### Installation
+
+Copy agents/ to .claude/agents/ in any project. Copy an operation template to .claude/commands/. Edit objectives. Run the slash command. Read the battle map.
+
+
+---
+
+## Full Academic Paper
+
+# Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration
+
+**Diego Carranza**
+AXL Protocol Research
+April 2026
+
+**Abstract.** We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts. In our validation operation (OPBLITZ3), one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes of wall-clock time, representing an estimated 200x reduction in human cognitive load compared to sequential implementation. We report the architecture, the coordination protocol, the decomposition algorithm, and the empirical results from the first field deployment.
+
+---
+
+## 1. Introduction
+
+Large language model (LLM) coding agents have demonstrated remarkable capability on isolated programming tasks. Tools such as Claude Code (Anthropic, 2025), Cursor, and GitHub Copilot Workspace allow developers to delegate implementation work to AI systems. However, a fundamental bottleneck remains: **the human is the serializer**. Each agent session requires human attention to define scope, review output, and integrate results. A developer working with one agent at a time achieves linear throughput. The agent is fast, but the human coordination overhead grows linearly with the number of tasks.
+
+This paper addresses the question: *Can a single human effectively command dozens of AI agents working simultaneously on a shared codebase, without the coordination overhead collapsing the productivity gains?*
+
+We answer in the affirmative. CommandCC achieves this through three mechanisms:
+
+1. **Hierarchical agent specialization** that matches model capability to task complexity, reducing cost while maintaining quality at decision boundaries.
+2. **Automated objective decomposition** that converts high-level human intent into fine-grained parallel work streams, eliminating the human bottleneck of manual task breakdown.
+3. **File-based coordination** that uses the shared filesystem as the sole communication channel between agents, avoiding the complexity of message-passing protocols.
+
+The result is what we term **quantumized execution**: the operator's input (a small number of objective sentences) is expanded through decomposition into a large number of independent execution streams that proceed in parallel, analogous to how a quantum operation acts on multiple states simultaneously. The operator observes the collapsed result (the battle map) without needing to observe or manage individual agent execution.
+
+### 1.1. Contributions
+
+- A production-validated architecture for parallel AI agent orchestration
+- The Decomposer pattern: an automatic objective-splitting algorithm with formal independence constraints
+- A file-based coordination protocol that requires zero inter-agent communication
+- Empirical results from a 16-agent field deployment (OPBLITZ3)
+- An open-source implementation with 27 pre-built agent definitions and 9 operation templates
+
+### 1.2. Terminology
+
+| Term | Definition |
+|---|---|
+| **Agent** | A single Claude Code subagent instance with a defined role, model tier, and tool permissions |
+| **Operation** | A structured multi-phase execution plan with defined objectives and success criteria |
+| **Wave** | A set of agents executing in parallel within a single phase |
+| **Phase** | A sequential stage of an operation (e.g., recon, strategy, build) |
+| **Battle map** | The consolidated after-action report produced at operation completion |
+| **Decomposition** | The process of splitting one objective into multiple independent sub-objectives |
+| **OPORD** | Operation Order, the formal mission specification |
+| **SITREP** | Situation Report, a status update from an agent to command |
+
+---
+
+## 2. Background and Related Work
+
+### 2.1. Multi-Agent LLM Systems
+
+Prior work on multi-agent LLM systems has explored several coordination paradigms:
+
+**Debate and deliberation.** Du et al. (2023) proposed multi-agent debate where agents argue toward consensus. While effective for reasoning tasks, this approach introduces communication overhead proportional to O(n^2) for n agents and does not address parallel code generation.
+
+**Role-playing frameworks.** CAMEL (Li et al., 2023) and MetaGPT (Hong et al., 2023) assign complementary roles to agents (e.g., programmer and reviewer) that interact through structured conversations. These systems typically operate with 2-5 agents and rely on message-passing protocols that become coordination bottlenecks at scale.
+
+**Hierarchical planning.** HuggingGPT (Shen et al., 2023) uses a controller LLM to decompose tasks and delegate to specialist models. This is closest to our approach, but operates at the API-call level rather than the codebase level and does not address the challenge of parallel writes to a shared filesystem.
+
+**Swarm architectures.** OpenAI's Swarm framework (2024) implements lightweight agent handoffs but does not provide structured phasing or automatic decomposition.
+
+### 2.2. The Serialization Problem
+
+The fundamental limitation of existing multi-agent coding systems is what we call the **serialization problem**: regardless of how many agents are available, the human operator must sequentially (a) define each agent's task, (b) monitor each agent's execution, and (c) integrate each agent's output. For n agents, the human coordination cost is O(n), which negates the parallelism benefit when n is large.
+
+CommandCC addresses this through two mechanisms:
+- The **Decomposer** eliminates (a) by automatically generating fine-grained task definitions from coarse objectives.
+- **File-based coordination** with phased execution eliminates (b) and (c) by ensuring agents coordinate through artifacts rather than requiring human mediation.
+
+### 2.3. Military Command and Control Doctrine
+
+Our system draws structural inspiration from military C2 (command and control) doctrine, particularly:
+
+- **Mission-type orders (Auftragstaktik)**: specify the objective and constraints but leave execution details to subordinate commanders. Our OPORD format follows this pattern.
+- **Staff layering**: strategic, operational, and tactical tiers with distinct authorities and information access. Our three-tier agent hierarchy mirrors this.
+- **Common operating picture**: all participants share awareness through a consolidated status view. Our battle map serves this function.
+
+The key insight from C2 doctrine is that **coordination cost can be reduced by increasing structure**, not by increasing communication bandwidth. Agents that share a common doctrine (file naming conventions, phase sequencing, output formats) need less point-to-point communication.
+
+---
+
+## 3. System Architecture
+
+### 3.1. Overview
+
+CommandCC consists of three components:
+
+1. **Agent definitions**: Markdown files specifying an agent's role, model tier, tool permissions, input/output artifacts, and behavioral constraints.
+2. **Operation templates**: Executable command files that orchestrate multi-phase agent deployments.
+3. **C2 server** (optional): A REST API for multi-server fleet deployments, enabling agents on different machines to coordinate through a centralized message store.
+
+For single-machine deployments, only (1) and (2) are required. The agents coordinate exclusively through filesystem artifacts.
+
+### 3.2. The Three-Tier Agent Hierarchy
+
+We define three agent tiers mapped to Claude model families:
+
+#### Tier 1: Command (Opus-class)
+
+- **Role**: Strategic thinking, objective decomposition, architectural design, quality review, integration
+- **Permissions**: Read-only. Command-tier agents never write code.
+- **Context window usage**: High. These agents receive broad situational awareness.
+- **Cost**: Highest per-token cost. Used sparingly (2-4 per operation).
+- **Agents**: Strategist, Decomposer, Integrator, Architects (system, security, data, API), Reviewers (code, security, architecture, compliance)
+
+The read-only constraint on command-tier agents is deliberate. Strategic agents that also write code tend to over-engineer solutions and lose architectural perspective. Separating thinking from building produces higher-quality outcomes at both levels.
+
+#### Tier 2: Operations (Sonnet-class)
+
+- **Role**: Implementation, integration, testing
+- **Permissions**: Full (read, write, edit, bash execution)
+- **Context window usage**: Focused. Each agent receives only the artifacts relevant to its specific sub-objective.
+- **Cost**: Medium. The workhorse tier. 4-16 per operation.
+- **Agents**: Builders (backend, frontend, API, database, infrastructure), Wirers (import, config, startup), Testers (unit, integration, security, load)
+
+#### Tier 3: Reconnaissance (Haiku-class)
+
+- **Role**: Fast scanning, health checking, log analysis, dependency auditing
+- **Permissions**: Read-only plus diagnostic commands
+- **Context window usage**: Minimal. Quick in, quick out.
+- **Cost**: Lowest. Used liberally (4-16 per operation).
+- **Agents**: File scanner, Dependency checker, Log analyzer, Health checker
+
+This hierarchy optimizes for cost-quality tradeoff: expensive models think, mid-range models build, cheap models scan.
+
+### 3.3. Agent Definition Format
+
+Each agent is defined by a Markdown file with YAML frontmatter:
+
+```
+---
+name: [unique identifier]
+description: [invocation trigger for the orchestrator]
+model: opus | sonnet | haiku
+tools: [comma-separated tool list]
+---
+
+[System prompt defining role, context, responsibilities,
+ output format, and behavioral constraints]
+```
+
+The description field serves as the orchestrator's dispatch key: it determines when and why this agent is invoked.
+
+---
+
+## 4. The Decomposer: Automated Objective Multiplication
+
+### 4.1. Motivation
+
+Consider a human operator who wants to deploy four features to a web application. Without decomposition, the operator must manually break each feature into implementation tasks, identify file boundaries, assess dependencies, and assign work to agents. This manual decomposition is:
+
+- **Time-consuming**: 15-30 minutes per objective for a complex codebase
+- **Error-prone**: humans underestimate cross-file dependencies
+- **Bottlenecking**: the human becomes the serializer again
+
+The Decomposer automates this process.
+
+### 4.2. Algorithm
+
+The Decomposer is an Opus-class agent that executes a single function: given a set of high-level objectives, produce a set of independent sub-objectives suitable for parallel execution.
+
+**Input**: `OPERATION-PLAN.md` (from the Strategist, containing N objectives with descriptions and scope)
+
+**Output**: `DECOMPOSITION.md` (mapping each objective to 1-4 sub-objectives with file assignments)
+
+**Decomposition rules:**
+
+1. **Independence constraint**: Each sub-objective must be independently executable. An agent assigned to sub-objective S_i must be able to complete its work with no input from the agent working on S_j (where i != j).
+
+2. **Dependency absorption**: If two pieces of work share a dependency (a common type, a base class, a configuration value), they must be kept in the same sub-objective. The dependency is the signal that they are one unit of work.
+
+3. **File isolation**: Sub-objectives within the same parent objective should not modify the same file. If file overlap is unavoidable, the Decomposer flags it for the Wire phase.
+
+4. **Complexity threshold**: Objectives estimated at fewer than 50 lines of changes are not decomposed. Artificial splitting of simple work creates coordination overhead that exceeds the parallelism benefit.
+
+5. **Cardinality cap**: No objective may produce more than 4 sub-objectives. This respects the orchestrator's parallel execution limit (Claude Code supports up to 10 concurrent subagents) while leaving capacity for other phases.
+
+### 4.3. Formal Definition
+
+Let O = {o_1, o_2, ..., o_n} be the set of objectives from the Strategist.
+
+The Decomposer function D maps each objective to a set of sub-objectives:
+
+```
+D(o_i) = {s_i1, s_i2, ..., s_ik}  where 1 <= k <= 4
+```
+
+Subject to the independence constraint:
+
+```
+For all s_ia, s_ib in D(o_i) where a != b:
+  files(s_ia) INTERSECT files(s_ib) = EMPTY SET
+  deps(s_ia) INTERSECT deps(s_ib) = EMPTY SET
+```
+
+And the total sub-objective count:
+
+```
+|S| = SUM(|D(o_i)|) for i in 1..n
+```
+
+For n=4 objectives with an average decomposition factor of 3:
+
+```
+|S| = 4 * 3 = 12 sub-objectives
+```
+
+Each sub-objective proceeds through the remaining phases (architecture, build, test, review), yielding:
+
+```
+Total agents = |S| * phases_per_sub + overhead
+             = 12 * 4 + (recon + strategist + decomposer + wirers + integrator)
+             = 48 + (8 + 1 + 1 + 4 + 1)
+             = 63 agents
+```
+
+From 4 sentences of human input.
+
+### 4.4. The Multiplication Effect
+
+Without the Decomposer (manual decomposition):
+- Human defines 4 objectives
+- Human manually assigns 4 architect-builder-tester-reviewer chains
+- Total: 16 agents (4 objectives x 4 agents each)
+- Human time for decomposition: ~60 minutes
+
+With the Decomposer (automatic decomposition):
+- Human defines 4 objectives (4 sentences)
+- Decomposer produces 12 sub-objectives (~2 minutes)
+- System assigns 12 architect-builder-tester-reviewer chains + wirers
+- Total: 63 agents
+- Human time for decomposition: ~0 minutes
+
+The Decomposer achieves a **4x agent multiplication** with **zero additional human input**. This is the core innovation: the conversion of linear human effort into exponential agent deployment.
+
+---
+
+## 5. File-Based Coordination Protocol
+
+### 5.1. Design Principles
+
+Traditional multi-agent systems coordinate through message passing: agents send requests to other agents and await responses. This creates several problems at scale:
+
+- **Coupling**: agents must know about each other's interfaces
+- **Ordering**: message delivery order affects correctness
+- **Failure propagation**: one slow agent blocks all agents waiting for its messages
+- **Complexity**: n agents with pairwise communication require O(n^2) channels
+
+CommandCC eliminates message passing entirely. Agents coordinate through **shared filesystem artifacts** with strict naming conventions and phase sequencing.
+
+### 5.2. The Artifact Chain
+
+Each phase produces artifacts that become inputs to the next phase:
+
+```
+Phase 0 (Recon)    -> RECON-{topic}.md (one per scout)
+Phase 1 (Strategy) -> OPERATION-PLAN.md
+Phase 2 (Decompose)-> DECOMPOSITION.md
+Phase 3 (Architect)-> ARCHITECTURE-{sub-id}.md (one per sub-objective)
+Phase 4 (Build)    -> BUILD-NOTES-{sub-id}.md + code changes
+Phase 5 (Wire)     -> WIRE-NOTES-{obj-id}.md (one per objective)
+Phase 6 (Test)     -> TEST-RESULTS-{sub-id}.md (one per sub-objective)
+Phase 7 (Review)   -> REVIEW-{obj-id}.md (one per objective)
+Phase 8 (Integrate)-> BATTLE-MAP.md
+```
+
+**Key property**: no agent reads an artifact that hasn't been written by a prior phase. The phase sequence guarantees ordering without explicit synchronization.
+
+### 5.3. Conflict Avoidance
+
+The primary risk of parallel code generation is **write conflicts**: two agents modifying the same file simultaneously. CommandCC prevents this through three mechanisms:
+
+1. **Decomposer file isolation**: The Decomposer assigns non-overlapping file sets to each sub-objective. If files must overlap, they stay in the same sub-objective.
+
+2. **Phase-gated writes**: Only the Build phase (Phase 4) produces code changes. All builders within a wave execute against the same filesystem state and write to non-overlapping file sets.
+
+3. **Wire phase resolution**: The Wire phase (Phase 5) explicitly handles integration points between sub-objectives: imports, configuration, initialization hooks. Wirers operate at the objective level (not sub-objective), seeing all sub-objective outputs and resolving conflicts.
+
+### 5.4. Lessons from OPBLITZ3
+
+Our first field deployment revealed a conflict that validated the protocol design. Two builder agents in OPBLITZ3 both modified `empire1d.py`, a central daemon file. The edits were logically independent (different functions in the same file) but created a merge conflict.
+
+This incident directly motivated the Decomposer's file isolation constraint (Section 4.2, Rule 3). In subsequent operations, the Decomposer analyzes file ownership before producing sub-objectives, ensuring that no two parallel builders touch the same file.
+
+When file overlap is truly unavoidable (e.g., both sub-objectives need to add an import to the same module), the Decomposer flags it, and the Wire phase resolves it after all builds complete.
+
+---
+
+## 6. The Nine-Phase Octopus
+
+### 6.1. Phase Structure
+
+CommandCC operations follow a nine-phase sequential structure. Within each phase, agents fan out in parallel (the "arms of the octopus") and their artifacts collapse into a shared state before the next phase begins (the "spine").
+
+```
+Phase  Name        Tier       Parallelism    Duration (est.)
+-----  ----------  ---------  -------------  ---------------
+  0    Recon       Haiku      4-8 agents     30 seconds
+  1    Strategy    Opus       1 agent        2 minutes
+  2    Decompose   Opus       1 agent        2 minutes
+  3    Architecture Opus      N sub-objs     3 minutes
+  4    Build       Sonnet     N sub-objs     5 minutes
+  5    Wire        Sonnet     N objectives   3 minutes
+  6    Test        Sonnet     N sub-objs     3 minutes
+  7    Review      Opus       N objectives   2 minutes
+  8    Integration Opus       1 agent        2 minutes
+                                      TOTAL: ~22 minutes
+```
+
+Where N varies based on decomposition. For 4 objectives with average decomposition factor 3, N_sub = 12 and N_obj = 4.
+
+### 6.2. Batching for Scale
+
+Claude Code supports up to 10 concurrent subagents. When a phase requires more than 10 parallel agents, the orchestrator batches them:
+
+```
+If |agents_in_phase| <= 10:
+  Launch all in one wave
+If |agents_in_phase| > 10:
+  Batch 1: agents[0:10]   (parallel)
+  Batch 2: agents[10:20]  (parallel, after batch 1 completes)
+  ...
+```
+
+This batching is transparent to the agents. Each agent receives the same inputs regardless of which batch it executes in.
+
+### 6.3. Scaling Properties
+
+| Objectives | Subs (avg 3x) | Build Agents | Total Agents | Batches (build) | Est. Time |
+|---|---|---|---|---|---|
+| 2 | 6 | 6 | ~35 | 1 | 18 min |
+| 4 | 12 | 12 | ~63 | 2 | 22 min |
+| 8 | 24 | 24 | ~115 | 3 | 28 min |
+| 16 | 48 | 48 | ~220 | 5 | 38 min |
+
+Note the sublinear time scaling: doubling objectives does not double wall-clock time because the additional agents execute in parallel within each phase. The primary time cost is the sequential phase transitions (strategy, decompose, integrate), which are fixed regardless of objective count.
+
+---
+
+## 7. Empirical Results: OPERATION OPBLITZ3
+
+### 7.1. Context
+
+OPBLITZ3 was the first field deployment of the CommandCC pattern. The objective was to deploy four features to empire1.io, a production web application running on a Node.js/Python stack.
+
+### 7.2. Objectives
+
+1. **Moltbook content engine**: Integrate a new content generation system into the existing daemon process
+2. **Hybrid content pipeline**: Build a dual-mode content system with LLM generation and template fallback
+3. **Lifecycle management**: Add content lifecycle tracking with status transitions and expiration
+4. **LLM integration layer**: Wire LLM API calls with timeout handling, retry logic, and ratio-based routing
+
+### 7.3. Configuration
+
+- **Model**: Claude Sonnet 4 (builders/testers), Claude Opus 4 (architects/reviewers)
+- **Phases**: 4 (architecture, build, test, review)
+- **Agents per phase**: 4 (one per objective)
+- **Total agents**: 16
+- **Decomposition**: Manual (pre-Decomposer; this operation motivated its creation)
+
+### 7.4. Results
+
+| Metric | Value |
+|---|---|
+| Total wall-clock time | 13 minutes |
+| Agent deployments | 16 |
+| Features implemented | 4 |
+| Tests written | 131 |
+| Tests passing | 131 |
+| Tests failing | 0 |
+| Files created/modified | ~45 |
+| Lines of code generated | ~3,200 |
+| Human inputs during operation | 1 (the initial command) |
+| FRAGOs issued | 0 |
+| SPOTREPs received | 0 |
+
+### 7.5. Phase Timing
+
+```
+Phase 1 (Architecture):  T+0:00  to T+3:12   (3 min 12 sec)
+  4 Opus architects analyzed codebase, produced design docs
+
+Phase 2 (Build):         T+3:12  to T+8:45   (5 min 33 sec)
+  4 Sonnet builders implemented features in parallel
+
+Phase 3 (Test):          T+8:45  to T+11:30  (2 min 45 sec)
+  4 Sonnet testers wrote and executed test suites
+
+Phase 4 (Review):        T+11:30 to T+13:00  (1 min 30 sec)
+  4 Opus reviewers verified quality and integration
+```
+
+### 7.6. Efficiency Analysis
+
+**Sequential baseline estimate**: Implementing 4 features of this complexity sequentially (one developer, one agent) would require approximately 4-6 hours, accounting for context switching, manual integration, and iterative debugging.
+
+**CommandCC actual**: 13 minutes.
+
+**Speedup factor**: ~20x in wall-clock time.
+
+**Cognitive load compression**: The operator typed one command and read one battle map. The equivalent sequential process would require ~50 context switches (defining tasks, reviewing outputs, debugging integration issues, re-running tests). Compression factor: ~200x.
+
+### 7.7. Incident: The empire1d.py Conflict
+
+Two builders (Objective 1: moltbook engine, Objective 2: hybrid content) both modified `empire1d.py`, the main daemon entry point. Builder 1 added content generation functions. Builder 2 added template fallback logic. Both edits were semantically correct in isolation but produced a merge conflict when combined.
+
+The Wire phase resolved this manually, but the incident exposed a systematic risk: **parallel builders modifying the same file will conflict**. This directly motivated the Decomposer's file isolation constraint (Section 4.2) and the formal independence requirement for sub-objectives.
+
+Post-OPBLITZ3, the Decomposer prevents this class of error by analyzing file ownership during decomposition and keeping coupled modifications in the same sub-objective.
+
+---
+
+## 8. The C2 Server: Multi-Machine Fleet Coordination
+
+### 8.1. Architecture
+
+For organizations running agents across multiple servers, CommandCC includes an optional C2 (command and control) server. This is a lightweight REST API backed by filesystem storage (no database).
+
+```
+                    OPERATOR
+                       |
+                  [C2 SERVER]
+                   port 9090
+                  /    |    \
+            [Unit 1] [Unit 2] ... [Unit N]
+            Server A  Server B    Server C
+```
+
+### 8.2. Communication Protocol
+
+- **Orders flow DOWN**: OPORD, FRAGO, Broadcast (command to units)
+- **Reports flow UP**: SITREP, INTREP, SPOTREP, REQUEST (units to command)
+- **Handoffs flow LATERAL**: HANDOFF (unit to unit, auto-CC to command)
+
+Each message type is a file written to a per-unit queue directory. Units poll for orders; command polls for reports. No persistent connections, no WebSockets, no databases.
+
+### 8.3. MCP Integration
+
+Fleet units connect to the C2 server through a Model Context Protocol (MCP) server that exposes six tools:
+
+| Tool | Function |
+|---|---|
+| `checkin` | Report current status to command |
+| `check_orders` | Retrieve and consume pending orders |
+| `submit_report` | Send a SITREP, SPOTREP, or REQUEST |
+| `send_handoff` | Transfer work to another unit |
+| `get_roster` | View the fleet roster |
+| `get_context` | Peek at unit state without consuming orders |
+
+These tools appear as native capabilities to each Claude Code instance, enabling agents to participate in fleet operations without any custom code.
+
+### 8.4. Terminal Command Post
+
+The C2 server includes a terminal UI (TUI) built with blessed that provides:
+
+- Real-time unit status display with color-coded health indicators
+- Incoming report queue with type/priority filtering
+- OPORD and FRAGO issuance forms
+- Broadcast capability to all units simultaneously
+- FLASH priority visual alerts (red/yellow flashing)
+
+This gives the human operator a single-pane view of all fleet activity.
+
+---
+
+## 9. Discussion
+
+### 9.1. When to Use CommandCC
+
+CommandCC is most effective when:
+
+- The work can be decomposed into **independent parallel streams** (feature additions, test suites, documentation, refactoring)
+- The codebase has **modular structure** with clear file boundaries
+- The operation benefits from **multiple perspectives** (architecture review, security review, compliance review)
+- The human operator values **time compression** over fine-grained control
+
+It is less suitable for:
+
+- Highly coupled sequential work where each step depends on the previous
+- Exploratory debugging where the problem definition evolves during investigation
+- Small tasks (< 30 minutes) where orchestration overhead exceeds the work itself
+
+### 9.2. Cost Considerations
+
+The three-tier hierarchy is designed to optimize cost:
+
+- Opus (most expensive) is used only for thinking: 2-4 invocations per operation
+- Sonnet (mid-range) handles the bulk: 8-16 invocations per operation
+- Haiku (cheapest) handles recon: 4-8 invocations per operation
+
+For OPBLITZ3 (16 agents), estimated token costs were approximately $8-12 total, compared to 4-6 hours of developer time at $75-150/hour ($300-900).
+
+### 9.3. Limitations
+
+**File conflict risk**: Despite the Decomposer's file isolation constraint, some codebases have high coupling that makes independent decomposition difficult. The Wire phase mitigates but does not eliminate this risk.
+
+**Context window bounds**: Each agent operates within its model's context window. Very large codebases may exceed the window, requiring agents to work with partial information.
+
+**Determinism**: LLM agents are non-deterministic. The same operation run twice may produce different code. This is mitigated by the test and review phases but not eliminated.
+
+**Orchestrator overhead**: The phase sequencing (strategy, then decompose, then architecture, then build) adds fixed overhead of ~7 minutes regardless of operation size. For operations with fewer than 3 objectives, the overhead may exceed the parallelism benefit.
+
+### 9.4. Future Work
+
+- **Adaptive decomposition**: Using the Decomposer's confidence scores to dynamically adjust decomposition granularity during execution
+- **Cross-operation learning**: Accumulating decomposition patterns from past operations to improve future decompositions
+- **Conflict prediction**: Training a model to predict file conflicts before they occur, enabling preemptive Wire phase planning
+- **Dynamic re-planning**: Allowing the Integrator to issue FRAGOs mid-operation when early phases reveal incorrect assumptions
+- **Multi-model orchestration**: Extending the hierarchy to include non-Claude models for specialized tasks (e.g., code-specific models for build, reasoning models for architecture)
+
+---
+
+## 10. Conclusion
+
+CommandCC demonstrates that massively parallel AI agent orchestration is practical today with existing tools. The key insight is structural: by imposing military-grade coordination doctrine (hierarchical authority, phased execution, file-based artifacts), we eliminate the inter-agent communication complexity that limits existing multi-agent systems.
+
+The Decomposer is the critical innovation. It converts O(n) human decomposition effort into O(1) by automating the objective-splitting process with formal independence constraints. Combined with the three-tier agent hierarchy and nine-phase execution structure, it enables a single human to deploy 60+ agents from 4 sentences of input.
+
+OPBLITZ3 proved the pattern: 16 agents, 4 features, 131 tests, 13 minutes. The gap between what one human can express (4 objectives) and what the system can execute (63 coordinated agent actions) is the quantumization effect. It is not artificial intelligence replacing human intelligence. It is artificial intelligence amplifying human intent.
+
+The source code, agent definitions, operation templates, and doctrine documentation are available at https://github.com/dcarranza-cc/commandcc under the Apache 2.0 license.
+
+---
+
+## References
+
+1. Anthropic. (2025). Claude Code: An agentic coding tool. Technical Report.
+
+2. Du, Y., Li, S., Torralba, A., Tenenbaum, J.B., & Mordatch, I. (2023). Improving Factuality and Reasoning in Language Models through Multiagent Debate. arXiv:2305.14325.
+
+3. Hong, S., Zhuge, M., Chen, J., Zheng, X., Cheng, Y., et al. (2023). MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework. arXiv:2308.00352.
+
+4. Li, G., Hammoud, H.A.A.K., Itani, H., Khizbullin, D., & Ghanem, B. (2023). CAMEL: Communicative Agents for "Mind" Exploration of Large Language Model Society. arXiv:2303.17760.
+
+5. Shen, Y., Song, K., Tan, X., Li, D., Lu, W., & Zhuang, Y. (2023). HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face. arXiv:2303.17580.
+
+6. OpenAI. (2024). Swarm: An experimental framework for lightweight multi-agent orchestration. GitHub Repository.
+
+7. Model Context Protocol Specification. (2024). Anthropic. https://modelcontextprotocol.io
+
+---
+
+## Appendix A: OPBLITZ3 Battle Map Summary
+
+```
+OPERATION: OPBLITZ3
+DATE: 2026-04-01
+DURATION: 13 minutes
+AGENTS: 16
+RESULT: COMPLETE
+
+OBJECTIVES:
+  A. Moltbook content engine ........... COMPLETE (34 tests)
+  B. Hybrid content pipeline ........... COMPLETE (38 tests)
+  C. Lifecycle management .............. COMPLETE (31 tests)
+  D. LLM integration layer ............. COMPLETE (28 tests)
+
+TOTALS:
+  Tests written: 131
+  Tests passing: 131
+  Tests failing: 0
+  Files changed: ~45
+  Lines generated: ~3,200
+```
+
+## Appendix B: Decomposition Example
+
+**Input objective**: "Deploy moltbook content engine to the daemon"
+
+**Decomposer output**:
+
+```
+OBJECTIVE A: Deploy moltbook content engine
+  SUB-A1: Swap content generation calls in daemon
+    Files: daemon/content_generator.py
+    Est: 80 lines
+    Rationale: Isolated to generation logic, no shared state
+
+  SUB-A2: Build LLM timeout and template fallback layer
+    Files: daemon/llm_client.py, daemon/templates.py
+    Est: 120 lines
+    Rationale: New files, no overlap with A1 or A3
+
+  SUB-A3: Wire 90/10 ratio gate before LLM call
+    Files: daemon/routing.py, config/ratios.yaml
+    Est: 60 lines
+    Rationale: New routing module, config-only changes
+
+  SUB-A4: Add logging for HYBRID vs TEMPLATE_FALLBACK decisions
+    Files: daemon/logging_ext.py, tests/test_logging.py
+    Est: 45 lines
+    Rationale: Observability layer, no production logic overlap
+
+  FILE OVERLAP: None detected
+  INDEPENDENCE: Verified (no cross-sub dependencies)
+```
+
+## Appendix C: Agent Inventory
+
+| Category | Agent | Tier | Model | Count in Typical Op |
+|---|---|---|---|---|
+| Command | Strategist | 1 | Opus | 1 |
+| Command | Decomposer | 1 | Opus | 1 |
+| Command | Integrator | 1 | Opus | 1 |
+| Architect | System Architect | 1 | Opus | N_sub |
+| Architect | Security Architect | 1 | Opus | 0-1 |
+| Architect | Data Architect | 1 | Opus | 0-1 |
+| Architect | API Architect | 1 | Opus | 0-1 |
+| Builder | Backend Builder | 2 | Sonnet | N_sub |
+| Builder | Frontend Builder | 2 | Sonnet | 0-N_sub |
+| Builder | API Builder | 2 | Sonnet | 0-N_sub |
+| Builder | Database Builder | 2 | Sonnet | 0-N_sub |
+| Builder | Infra Builder | 2 | Sonnet | 0-1 |
+| Wirer | Import Wirer | 2 | Sonnet | N_obj |
+| Wirer | Config Wirer | 2 | Sonnet | 0-N_obj |
+| Wirer | Startup Wirer | 2 | Sonnet | 0-N_obj |
+| Tester | Unit Tester | 2 | Sonnet | N_sub |
+| Tester | Integration Tester | 2 | Sonnet | 0-N_obj |
+| Tester | Security Tester | 2 | Sonnet | 0-1 |
+| Tester | Load Tester | 2 | Sonnet | 0-1 |
+| Reviewer | Code Reviewer | 1 | Opus | N_obj |
+| Reviewer | Security Reviewer | 1 | Opus | 0-1 |
+| Reviewer | Architecture Reviewer | 1 | Opus | 0-1 |
+| Reviewer | Compliance Reviewer | 1 | Opus | 0-1 |
+| Scout | File Scanner | 3 | Haiku | 1-4 |
+| Scout | Dependency Checker | 3 | Haiku | 1-2 |
+| Scout | Log Analyzer | 3 | Haiku | 0-2 |
+| Scout | Health Checker | 3 | Haiku | 1-4 |
+
+Where N_sub = number of sub-objectives (typically 8-16) and N_obj = number of objectives (typically 3-8).
+
+---
+
+## Agent Definitions
+
+### decomposer
+
+---
+name: decomposer
+description: THE MULTIPLIER. Invoked immediately after the strategist produces OPERATION-PLAN.md. Reads every objective and breaks each one into 2-4 independent, parallel-executable sub-objectives. Invoke once per operation, after strategy, before architecture.
+model: opus
+tools: Read, Grep, Glob, Bash
+---
+
+## Context
+
+The decomposer is the most critical agent in CommandCC. It sits between strategy and architecture and is the mechanism that enables parallel execution at scale. Without the decomposer, work is sequential. With it, 4-16 builder agents can work simultaneously on non-overlapping pieces of the system.
+
+The decomposer's only job is to take objectives from `OPERATION-PLAN.md` and split them into sub-objectives that can be assigned to separate agents with zero coordination required between those agents.
+
+**Independence is the only metric that matters.** A sub-objective that requires output from another sub-objective is a failure. It becomes a bottleneck and breaks parallelism.
+
+Input artifacts required:
+- `OPERATION-PLAN.md` (from strategist)
+- Codebase structure knowledge (from recon or direct inspection)
+
+## Responsibilities
+
+1. Read `OPERATION-PLAN.md` in full. Understand every objective, its scope, and its boundaries.
+2. For each objective, determine whether decomposition is beneficial. Simple, atomic objectives should not be artificially split.
+3. For objectives that merit decomposition, identify natural fault lines: separate modules, separate layers (data vs. API vs. UI), separate services, or separate concerns (schema vs. logic vs. tests).
+4. Define 2-4 sub-objectives per objective. Each sub-objective must be independently executable. An agent assigned to SUB-1 must be able to complete it with no input from the agent working SUB-2.
+5. If two pieces of work share a dependency (e.g., both need a shared type, a base class, or a config value), keep them together in one sub-objective rather than splitting. The dependency is the signal that they are one unit of work.
+6. Assign each sub-objective a clear owner category: which builder, architect, or tester type handles it.
+7. Document the decomposition rationale. Explain why each split was made and what assumption of independence it rests on.
+8. Write `DECOMPOSITION.md` to the operation workspace.
+
+## Output Format
+
+File: `DECOMPOSITION.md`
+
+```markdown
+# DECOMPOSITION
+**Operation:** [name]
+**Source:** OPERATION-PLAN.md
+**Date:** [date]
+
+## Decomposition Summary
+[Total objectives, total sub-objectives, parallelism factor achieved]
+
+---
+
+## OBJ-1: [Objective Name]
+**Decomposed:** Yes | No
+**Rationale:** [Why this was split, or why it was kept atomic]
+
+### SUB-1.1: [Sub-objective Name]
+**Owner:** [agent type, e.g., backend-builder]
+**Scope:** [Exact files, directories, or components]
+**Inputs:** [What this sub-objective reads but does not own]
+**Outputs:** [What this sub-objective produces]
+**Independence Assertion:** [Statement confirming no dependency on other subs in this objective]
+
+### SUB-1.2: [Sub-objective Name]
+**Owner:** [agent type]
+**Scope:** [Exact files, directories, or components]
+**Inputs:** [What this sub-objective reads but does not own]
+**Outputs:** [What this sub-objective produces]
+**Independence Assertion:** [Statement confirming no dependency on other subs in this objective]
+
+---
+
+## OBJ-2: [Objective Name]
+**Decomposed:** No
+**Rationale:** [This objective is atomic because X and Y are tightly coupled via Z]
+
+### SUB-2.1: [Same as OBJ-2, not split]
+**Owner:** [agent type]
+**Scope:** [Full scope of original objective]
+**Inputs:** [...]
+**Outputs:** [...]
+**Independence Assertion:** Single sub-objective, independence constraint not applicable.
+
+---
+
+## Parallel Execution Map
+
+| Phase | Sub-objectives runnable in parallel |
+|-------|--------------------------------------|
+| 1     | SUB-1.1, SUB-1.2, SUB-2.1           |
+| 2     | SUB-3.1, SUB-3.2                     |
+
+## Wire Points
+[List any integration points that will require wirer agents after builders complete.
+These are the ONLY places where parallel work must be merged.]
+```
+
+## Rules
+
+- HARD CAP: Never exceed 4 sub-objectives per objective. If work seems to require more splits, the objective was scoped too broadly. Escalate to the strategist.
+- Do NOT split an objective if the pieces share a critical dependency. Shared interfaces, shared state, or shared config are signals to keep work together.
+- Do NOT create sub-objectives that are purely sequential (SUB-2 requires SUB-1's output). If sequencing is unavoidable, they are one sub-objective.
+- Do NOT invent new objectives not present in OPERATION-PLAN.md. Only decompose what exists.
+- Do NOT assign scope overlap between sub-objectives. Each file or component must belong to exactly one sub-objective. If a file is needed by two subs, it belongs to neither and must become a shared input (read-only) or be resolved by a wirer agent.
+- Do NOT skip the Independence Assertion. It is the audit trail proving the decomposition is valid.
+- Keep `DECOMPOSITION.md` as the single assignment document for all downstream agents. Architects and builders must be able to read only their sub-objective entry and know exactly what to do.
+
+### integrator
+
+---
+name: integrator
+description: Final Tier 1 agent. Invoked after all reviewers have produced their reports. Reads all review outputs, identifies conflicts or unresolved issues, and produces the definitive BATTLE-MAP.md that closes the operation and briefs the next one.
+model: opus
+tools: Read, Grep, Glob, Bash
+---
+
+## Context
+
+The integrator is the last agent to run in any operation. By the time it is invoked, all builds, tests, and reviews are complete. The integrator does not fix code. It reads all review reports, reconciles conflicts, surfaces critical findings, and produces `BATTLE-MAP.md`: a document that closes the current operation and serves as institutional memory for the next.
+
+The integrator's judgment is the final command-tier assessment of the operation. If a reviewer flagged a critical issue that was not resolved, the integrator must say so. If the operation succeeded cleanly, the integrator confirms it.
+
+Input artifacts expected:
+- `OPERATION-PLAN.md`
+- `DECOMPOSITION.md`
+- `REVIEW-CODE.md` (from code-reviewer)
+- `REVIEW-SECURITY.md` (from security-reviewer)
+- `REVIEW-ARCH.md` (from architecture-reviewer)
+- `REVIEW-COMPLIANCE.md` (from compliance-reviewer)
+- Any test result files
+
+## Responsibilities
+
+1. Read all review reports in full. Note every finding, its severity, and whether the reviewer marked it as resolved or outstanding.
+2. Cross-reference review findings against the original OPERATION-PLAN.md objectives. Determine whether each objective was fully achieved, partially achieved, or failed.
+3. Identify conflicts between reviewer findings. If the code reviewer approved something the security reviewer flagged, that conflict must be named explicitly.
+4. Triage all outstanding findings by severity: CRITICAL (blocks deployment), HIGH (must fix in next operation), MEDIUM (should fix), LOW (track only).
+5. Produce a final operation status: CLEAN (deploy with confidence), CONDITIONAL (deploy after resolving named items), HOLD (critical issues block deployment).
+6. Write the operations narrative: what was built, how the system changed, what risks remain.
+7. Produce the BATTLE-MAP.md with full operational record, ready to hand to the next strategist.
+
+## Output Format
+
+File: `BATTLE-MAP.md`
+
+```markdown
+# BATTLE MAP
+**Operation:** [name]
+**Date Closed:** [date]
+**Status:** CLEAN | CONDITIONAL | HOLD
+**Condition:** [If CONDITIONAL or HOLD, the exact condition that must be met]
+
+## Operation Summary
+[2-3 paragraphs. What was the goal, what was built, what changed in the system.]
+
+## Objective Outcomes
+
+| Objective | Status        | Notes                              |
+|-----------|---------------|------------------------------------|
+| OBJ-1     | ACHIEVED      |                                    |
+| OBJ-2     | PARTIAL       | [what was not completed]           |
+| OBJ-3     | FAILED        | [why it failed]                    |
+
+## Review Findings Summary
+
+### CRITICAL
+- [Finding]: [Source reviewer]: [Resolution status]
+
+### HIGH
+- [Finding]: [Source reviewer]: [Resolution status]
+
+### MEDIUM
+- [Finding]: [Source reviewer]: [Resolution status]
+
+### LOW
+- [Finding]: [Source reviewer]: [Resolution status]
+
+## Conflicts Between Reviewers
+[Any cases where reviewers disagreed. State the conflict and the integrator's ruling.]
+
+## System State After Operation
+[Describe the system as it now exists. Not what was done, but what is true now.
+This is the "current state" for the next strategist to read.]
+
+## Known Technical Debt
+[Items intentionally deferred. Not failures, just deferred decisions.]
+
+## Recommended Next Operations
+[What should be done next. Informed by outstanding findings, known debt, and system state.]
+
+## Artifacts Produced
+[List of all files created or modified during this operation, with one-line descriptions.]
+```
+
+## Rules
+
+- Do NOT modify any application code. The integrator is read-only.
+- Do NOT suppress or minimize critical findings. If a reviewer flagged CRITICAL, the integrator must surface it, even if other reviewers were satisfied.
+- Do NOT mark an operation CLEAN if any CRITICAL finding is unresolved.
+- Do NOT produce a BATTLE-MAP.md without reading every review report. Partial integration is a failure.
+- Do NOT introduce new technical judgments not grounded in the review reports. The integrator synthesizes, it does not invent.
+- Keep the "System State After Operation" section current and accurate. The next strategist will read it as ground truth.
+
+### strategist
+
+---
+name: strategist
+description: Invoked at the start of every operation. Reads all recon reports and scout outputs, then produces the master OPERATION-PLAN.md that drives the entire operation. Invoke when a new task, feature, or fix has been scoped and recon is complete.
+model: opus
+tools: Read, Grep, Glob, Bash
+---
+
+## Context
+
+The strategist is the first Tier 1 agent to run in any operation. It receives raw intelligence from scouts and recon agents and converts that intelligence into a structured, executable plan. The strategist must understand the existing system before prescribing changes. It does not write code. It writes plans.
+
+Input artifacts expected before invocation:
+- `RECON-REPORT.md` (from scouts)
+- Any existing architecture documents, README files, or prior BATTLE-MAP.md files
+- The operator's stated goal or task brief
+
+## Responsibilities
+
+1. Read all scout and recon outputs to build a complete picture of the current system state, including file structure, dependencies, health status, and known issues.
+2. Analyze the operator's goal in context of the existing system. Identify what must change, what must stay stable, and what is unknown.
+3. Define a set of clear, named objectives. Each objective must be a concrete deliverable, not a vague direction. Use action verbs: "Implement X", "Migrate Y", "Replace Z with W".
+4. Assign a phase to each objective (Phase 1, Phase 2, etc.). Phase 1 objectives are foundational and must not depend on Phase 2 work. Within a phase, objectives must be independent.
+5. Identify risks for each objective. Risks are concrete failure modes, not general concerns. Each risk must have a stated mitigation.
+6. Identify unknowns that require further recon before architecture can begin. Flag these explicitly.
+7. Write `OPERATION-PLAN.md` to the operation workspace.
+
+## Output Format
+
+File: `OPERATION-PLAN.md`
+
+```markdown
+# OPERATION PLAN
+**Operation:** [name]
+**Date:** [date]
+**Operator Goal:** [verbatim or paraphrased goal]
+
+## Situation Assessment
+[2-4 paragraphs summarizing current system state based on recon]
+
+## Objectives
+
+### Phase 1
+
+#### OBJ-1: [Objective Name]
+**Deliverable:** [What exists when this is done]
+**Scope:** [Files, services, components in scope]
+**Out of Scope:** [What is explicitly excluded]
+**Risks:**
+- [Risk]: [Mitigation]
+**Unknowns:**
+- [Any gaps that need resolution before execution]
+
+#### OBJ-2: [Objective Name]
+[same structure]
+
+### Phase 2
+
+#### OBJ-3: [Objective Name]
+[same structure]
+
+## Phasing Rationale
+[Why objectives are ordered this way. What dependencies exist between phases.]
+
+## Success Criteria
+[How to know the operation succeeded. Measurable where possible.]
+
+## Anti-Objectives
+[What this operation must NOT do. Scope boundaries.]
+```
+
+## Rules
+
+- Do NOT write any application code. No code blocks containing implementation.
+- Do NOT proceed if recon reports are absent. Request recon first.
+- Do NOT define more than 8 objectives per operation. Scope must be controlled.
+- Do NOT create objectives that are vague ("improve performance"). All objectives must be concrete and deliverable.
+- Do NOT assume technology choices without evidence from recon. If the stack is unknown, flag it as an unknown.
+- Do NOT create phase dependencies where none are necessary. Minimize sequential constraints.
+- Keep `OPERATION-PLAN.md` as the single source of truth. Do not scatter decisions across multiple documents.
+
