@@ -3,40 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CommandCC - Whitepaper</title>
-  <meta name="description" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
+  <title>CommandCC - Command Claude Code. Conquer.</title>
+  <meta name="description" content="Deploy 16-128 AI agents in parallel from a single terminal. Military-grade orchestration for Claude Code.">
+  <meta property="og:title" content="CommandCC - Command Claude Code. Conquer.">
+  <meta property="og:description" content="16 agents. 4 features. 131 tests. 13 minutes. Military-grade orchestration for Claude Code.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dcarranza-cc.github.io/commandcc/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0e17;
+      --bg: #050810;
+      --bg2: #0a0f1a;
       --surface: #111827;
+      --surface2: #1a2332;
       --border: #1e293b;
+      --border-bright: #334155;
       --text: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --accent: #22d3ee;
-      --accent-dim: #0e7490;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --cyan: #22d3ee;
+      --cyan-dim: #0e7490;
+      --cyan-glow: rgba(34, 211, 238, 0.15);
       --green: #4ade80;
-      --red: #f87171;
+      --green-dim: #166534;
       --yellow: #fbbf24;
+      --red: #f87171;
+      --purple: #a78bfa;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.7;
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    /* Navigation */
+    /* ═══ NAV ═══ */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(10, 14, 23, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(5, 8, 16, 0.9);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      z-index: 100;
+      z-index: 1000;
       padding: 0 2rem;
     }
 
@@ -46,427 +65,1027 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 60px;
+      height: 64px;
     }
 
     .nav-brand {
+      font-family: var(--mono);
       font-weight: 700;
-      font-size: 1.2rem;
-      color: var(--accent);
+      font-size: 1.1rem;
+      color: var(--cyan);
       text-decoration: none;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
     }
 
+    .nav-brand span { color: var(--text-dim); font-weight: 400; }
+
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+
     .nav-links a {
-      color: var(--text-secondary);
+      color: var(--text-dim);
       text-decoration: none;
-      margin-left: 2rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
       transition: color 0.2s;
     }
 
-    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--cyan); }
 
-    /* Hero */
+    .nav-cta {
+      background: var(--cyan) !important;
+      color: var(--bg) !important;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--green) !important; }
+
+    /* ═══ HERO ═══ */
     .hero {
-      padding: 120px 2rem 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
-      border-bottom: 1px solid var(--border);
+      padding: 100px 2rem 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 50% 50%, var(--cyan-glow) 0%, transparent 50%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      border: 1px solid var(--cyan-dim);
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--accent), var(--green));
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      letter-spacing: -2px;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--cyan), var(--green));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero .subtitle {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 700px;
-      margin: 0 auto 2rem;
+    .hero h1 .dim { color: var(--text-dim); }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--text-dim);
+      max-width: 650px;
+      margin: 0 auto 3rem;
+      font-weight: 400;
     }
 
-    .hero .authors {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-    }
-
-    .stats-row {
+    .hero-stats {
       display: flex;
       justify-content: center;
-      gap: 3rem;
+      gap: 4rem;
+      margin-bottom: 3rem;
       flex-wrap: wrap;
-      margin-top: 2rem;
     }
 
-    .stat {
+    .hero-stat {
       text-align: center;
     }
 
-    .stat .number {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--accent);
+    .hero-stat .num {
+      font-family: var(--mono);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--cyan);
       display: block;
+      line-height: 1;
     }
 
-    .stat .label {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
+    .hero-stat .lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      margin-top: 0.5rem;
     }
 
-    /* PDF Viewer Section */
-    .pdf-section {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 3rem 2rem;
-    }
-
-    .pdf-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-    }
-
-    .pdf-header h2 {
-      font-size: 1.5rem;
-      color: var(--text);
-    }
-
-    .pdf-actions {
-      display: flex;
-      gap: 0.75rem;
-    }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.5rem 1.25rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.2s;
-      cursor: pointer;
       border: none;
+      cursor: pointer;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: var(--bg);
-    }
+    .btn-primary { background: var(--cyan); color: var(--bg); }
+    .btn-primary:hover { background: var(--green); transform: translateY(-1px); }
 
-    .btn-primary:hover {
-      background: var(--green);
-    }
-
-    .btn-outline {
+    .btn-ghost {
       background: transparent;
-      color: var(--accent);
-      border: 1px solid var(--accent-dim);
+      color: var(--text);
+      border: 1px solid var(--border-bright);
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ═══ TERMINAL DEMO ═══ */
+    .terminal-section {
+      padding: 6rem 2rem;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .btn-outline:hover {
-      background: var(--accent-dim);
-      color: white;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
-    /* Paper Content */
-    .paper-frame {
-      background: #ffffff;
-      color: #1a1a2e;
-      border-radius: 8px;
-      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-    }
-
-    .paper-content {
-      padding: 4rem 3.5rem;
-      font-family: 'Georgia', 'Times New Roman', serif;
-      font-size: 15px;
-      line-height: 1.8;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .paper-content::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .paper-content::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-
-    .paper-content::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 4px;
-    }
-
-    .paper-content h1 {
-      font-size: 1.6rem;
-      text-align: center;
-      margin-bottom: 0.5rem;
-      color: #1a1a2e;
-      line-height: 1.3;
-    }
-
-    .paper-content h2 {
-      font-size: 1.25rem;
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-      color: #1a1a2e;
-      border-bottom: 1px solid #e0e0e0;
-      padding-bottom: 0.3rem;
-    }
-
-    .paper-content h3 {
-      font-size: 1.05rem;
-      margin-top: 1.5rem;
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
       margin-bottom: 0.75rem;
-      color: #333;
     }
 
-    .paper-content p {
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
       margin-bottom: 1rem;
-      text-align: justify;
+      letter-spacing: -1px;
     }
 
-    .paper-content strong {
-      color: #0e7490;
+    .section-desc {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin-bottom: 3rem;
     }
 
-    .paper-content code {
-      background: #f5f5f5;
-      padding: 0.15rem 0.4rem;
-      border-radius: 3px;
-      font-size: 0.85em;
-      font-family: 'Consolas', 'Monaco', monospace;
+    .terminal {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.5);
     }
 
-    .paper-content pre {
-      background: #f8f9fa;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      padding: 1rem;
+    .terminal-bar {
+      background: #161b22;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot.red { background: #ff5f57; }
+    .terminal-dot.yellow { background: #febc2e; }
+    .terminal-dot.green { background: #28c840; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.8;
       overflow-x: auto;
-      margin: 1rem 0;
-      font-size: 0.8rem;
-      line-height: 1.5;
     }
 
-    .paper-content pre code {
-      background: none;
-      padding: 0;
+    .t-prompt { color: var(--green); }
+    .t-cmd { color: var(--text); }
+    .t-comment { color: var(--text-muted); }
+    .t-output { color: var(--text-dim); }
+    .t-cyan { color: var(--cyan); }
+    .t-yellow { color: var(--yellow); }
+    .t-green { color: var(--green); }
+    .t-red { color: var(--red); }
+    .t-purple { color: var(--purple); }
+    .t-bold { font-weight: 700; }
+
+    /* ═══ OCTOPUS SECTION ═══ */
+    .octopus-section {
+      padding: 8rem 2rem;
     }
 
-    .paper-content table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-      font-size: 0.85rem;
+    .octopus-section .container { text-align: center; }
+
+    .phase-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      max-width: 800px;
+      margin: 3rem auto 0;
+      position: relative;
     }
 
-    .paper-content th, .paper-content td {
-      border: 1px solid #ddd;
-      padding: 0.5rem 0.75rem;
-      text-align: left;
+    .phase-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 100px 80px;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      background: var(--surface);
+      transition: background 0.2s;
     }
 
-    .paper-content th {
-      background: #f0f4f8;
+    .phase-row:first-child { border-radius: 10px 10px 0 0; }
+    .phase-row:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 10px 10px; }
+    .phase-row:hover { background: var(--surface2); }
+
+    .phase-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .phase-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .phase-tier {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      text-align: center;
       font-weight: 600;
     }
 
-    .paper-content blockquote {
-      border-left: 3px solid #0e7490;
-      padding-left: 1rem;
-      margin: 1rem 0;
-      color: #555;
-      font-style: italic;
+    .tier-opus { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
+    .tier-sonnet { background: rgba(34, 211, 238, 0.15); color: var(--cyan); }
+    .tier-haiku { background: rgba(74, 222, 128, 0.15); color: var(--green); }
+
+    .phase-time {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: right;
     }
 
-    .paper-content ol, .paper-content ul {
-      margin: 0.5rem 0 1rem 1.5rem;
+    .phase-row.highlight {
+      background: rgba(34, 211, 238, 0.05);
+      border-color: var(--cyan-dim);
     }
 
-    .paper-content li {
-      margin-bottom: 0.3rem;
-    }
+    .phase-row.highlight + .phase-row { border-top-color: var(--cyan-dim); }
 
-    .paper-content hr {
-      border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 2rem 0;
-    }
+    .phase-row.highlight .phase-name { color: var(--cyan); }
 
-    .paper-meta {
-      text-align: center;
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
+    /* ═══ AGENT HIERARCHY ═══ */
+    .hierarchy-section {
+      padding: 8rem 2rem;
+      background: var(--bg2);
       border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
       margin-top: 3rem;
     }
 
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
+    .tier-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.2s;
     }
 
-    /* Print styles for PDF generation */
-    @media print {
-      nav, .hero, .pdf-header, footer { display: none; }
-      .pdf-section { padding: 0; max-width: none; }
-      .paper-frame { box-shadow: none; border-radius: 0; }
-      .paper-content {
-        max-height: none;
-        overflow: visible;
-        padding: 2cm;
-        font-size: 11pt;
-      }
+    .tier-card:hover { transform: translateY(-4px); }
+
+    .tier-card.opus { border-top: 3px solid var(--purple); }
+    .tier-card.opus:hover { border-color: var(--purple); }
+    .tier-card.sonnet { border-top: 3px solid var(--cyan); }
+    .tier-card.sonnet:hover { border-color: var(--cyan); }
+    .tier-card.haiku { border-top: 3px solid var(--green); }
+    .tier-card.haiku:hover { border-color: var(--green); }
+
+    .tier-card h3 {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
     }
 
+    .tier-card.opus h3 { color: var(--purple); }
+    .tier-card.sonnet h3 { color: var(--cyan); }
+    .tier-card.haiku h3 { color: var(--green); }
+
+    .tier-card h4 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tier-card p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .tier-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tier-card li {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tier-card li:last-child { border-bottom: none; }
+
+    /* ═══ OPERATIONS ═══ */
+    .ops-section { padding: 8rem 2rem; }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .op-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .op-card:hover { border-color: var(--cyan-dim); }
+
+    .op-card h4 {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--cyan);
+      margin-bottom: 0.5rem;
+    }
+
+    .op-card p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .op-card .op-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+
+    /* ═══ DECOMPOSER ═══ */
+    .decomposer-section {
+      padding: 8rem 2rem;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .decomposer-visual {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: start;
+      margin-top: 3rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .decomp-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+
+    .decomp-box h4 {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .decomp-item {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    .decomp-item.input {
+      background: rgba(167, 139, 250, 0.1);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      color: var(--purple);
+    }
+
+    .decomp-item.output {
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      color: var(--cyan);
+      font-size: 0.78rem;
+    }
+
+    .decomp-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 2rem;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      gap: 0.5rem;
+    }
+
+    .decomp-arrow .arrow {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .decomp-math {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    .decomp-math strong { color: var(--cyan); font-size: 1.2rem; }
+
+    /* ═══ PROOF SECTION ═══ */
+    .proof-section { padding: 8rem 2rem; }
+
+    .proof-section .container { text-align: center; }
+
+    .proof-table {
+      margin: 3rem auto 0;
+      max-width: 500px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .proof-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-row:last-child { border-bottom: none; }
+
+    .proof-label { color: var(--text-dim); font-size: 0.9rem; }
+
+    .proof-value {
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    /* ═══ CTA ═══ */
+    .cta-section {
+      padding: 8rem 2rem;
+      text-align: center;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-section h2 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+
+    .cta-section h2 .gradient {
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cta-section p {
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    footer a { color: var(--cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 1.8rem; }
-      .stats-row { gap: 1.5rem; }
-      .stat .number { font-size: 1.8rem; }
-      .paper-content { padding: 2rem 1.5rem; }
-      .pdf-header { flex-direction: column; gap: 1rem; }
-      .nav-links a { margin-left: 1rem; font-size: 0.8rem; }
+      .hero h1 { font-size: 2.5rem; }
+      .hero-stats { gap: 2rem; }
+      .hero-stat .num { font-size: 2rem; }
+      .tier-cards { grid-template-columns: 1fr; }
+      .ops-grid { grid-template-columns: 1fr; }
+      .decomposer-visual { grid-template-columns: 1fr; }
+      .decomp-arrow { flex-direction: row; padding: 0; }
+      .decomp-arrow .arrow { transform: rotate(90deg); }
+      .section-title { font-size: 1.8rem; }
+      .cta-section h2 { font-size: 2rem; }
+      .phase-row { grid-template-columns: 50px 1fr 70px 60px; font-size: 0.85rem; padding: 0.6rem 0.75rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.75rem; }
     }
   </style>
 </head>
 <body>
 
+<!-- ═══ NAV ═══ -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand">COMMANDCC</a>
+    <a href="#" class="nav-brand">COMMANDCC <span>v0.1</span></a>
     <div class="nav-links">
-      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
-      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">Raw Markdown</a>
-      <a href="#paper">Read Paper</a>
+      <a href="#how">How It Works</a>
+      <a href="#agents">Agents</a>
+      <a href="#operations">Operations</a>
+      <a href="whitepaper.html">Whitepaper</a>
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="nav-cta">GitHub</a>
     </div>
   </div>
 </nav>
 
-<div class="hero">
-  <h1>Quantumized Execution</h1>
-  <p class="subtitle">
-    A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration
-  </p>
-  <p class="authors">
-    Diego Carranza &middot; AXL Protocol Research &middot; April 2026
-  </p>
-  <div class="stats-row">
-    <div class="stat">
-      <span class="number">16</span>
-      <span class="label">Agents Deployed</span>
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Open Source / Apache 2.0</div>
+    <h1>
+      <span class="gradient">Command</span> Claude Code.<br>
+      <span class="dim">Conquer.</span>
+    </h1>
+    <p class="hero-sub">
+      Deploy 16 to 128 AI agents in parallel from a single terminal.
+      You type objectives. The system deploys a coordinated fleet.
+      You read the battle map when it's done.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="num">16</span>
+        <span class="lbl">Agents</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">4</span>
+        <span class="lbl">Features</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">131</span>
+        <span class="lbl">Tests</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">13m</span>
+        <span class="lbl">Total Time</span>
+      </div>
     </div>
-    <div class="stat">
-      <span class="number">131</span>
-      <span class="label">Tests Written</span>
-    </div>
-    <div class="stat">
-      <span class="number">13</span>
-      <span class="label">Minutes Total</span>
-    </div>
-    <div class="stat">
-      <span class="number">200x</span>
-      <span class="label">Compression</span>
-    </div>
-  </div>
-</div>
-
-<div class="pdf-section" id="paper">
-  <div class="pdf-header">
-    <h2>Whitepaper</h2>
-    <div class="pdf-actions">
-      <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
-      <a class="btn btn-outline" href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">View Source</a>
-    </div>
-  </div>
-
-  <div class="paper-frame">
-    <div class="paper-content" id="paper-content">
-      <noscript>
-        <p>Please enable JavaScript to render the whitepaper, or <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md">read it on GitHub</a>.</p>
-      </noscript>
-      <div id="loading" style="text-align:center; padding: 3rem; color: #999;">Loading whitepaper...</div>
+    <div class="hero-buttons">
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="btn btn-primary">Get Started</a>
+      <a href="whitepaper.html" class="btn btn-ghost">Read the Paper</a>
+      <a href="#proof" class="btn btn-ghost">See the Proof</a>
     </div>
   </div>
-</div>
+</section>
 
+<!-- ═══ TERMINAL DEMO ═══ -->
+<section class="terminal-section">
+  <div class="container">
+    <div class="section-label">See It In Action</div>
+    <div class="section-title">One command. Sixteen agents.</div>
+    <div class="section-desc">You type four objectives. The system does the rest.</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <div class="terminal-title">claude ~ /project</div>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">$</span> <span class="t-cmd">/feature-deploy</span><br><br>
+        <span class="t-comment"># Objectives:</span><br>
+        <span class="t-comment">#   1. Deploy moltbook content engine</span><br>
+        <span class="t-comment">#   2. Build hybrid content pipeline with LLM fallback</span><br>
+        <span class="t-comment">#   3. Add content lifecycle management</span><br>
+        <span class="t-comment">#   4. Wire LLM integration with timeout handling</span><br><br>
+
+        <span class="t-cyan t-bold">[PHASE 0: RECON]</span> <span class="t-output">Launching 4 Haiku scouts...</span><br>
+        <span class="t-green">  &#10003; file-scanner</span>    <span class="t-output">287 files, 12 modules identified</span><br>
+        <span class="t-green">  &#10003; dep-checker</span>     <span class="t-output">No blocking vulnerabilities</span><br>
+        <span class="t-green">  &#10003; health-checker</span>  <span class="t-output">All services nominal</span><br>
+        <span class="t-green">  &#10003; log-analyzer</span>    <span class="t-output">No recent errors</span><br><br>
+
+        <span class="t-purple t-bold">[PHASE 1: STRATEGY]</span> <span class="t-output">Opus strategist analyzing...</span><br>
+        <span class="t-green">  &#10003;</span> <span class="t-output">OPERATION-PLAN.md written (4 objectives, 3 risk flags)</span><br><br>
+
+        <span class="t-purple t-bold">[PHASE 2: DECOMPOSE]</span> <span class="t-output">Opus decomposer splitting objectives...</span><br>
+        <span class="t-green">  &#10003;</span> <span class="t-output">4 objectives</span> <span class="t-yellow">-></span> <span class="t-cyan t-bold">14 sub-objectives</span><br>
+        <span class="t-output">    DECOMPOSITION.md written (0 file overlaps detected)</span><br><br>
+
+        <span class="t-purple t-bold">[PHASE 3: ARCHITECTURE]</span> <span class="t-output">Launching 14 Opus architects...</span><br>
+        <span class="t-green">  &#10003; 14/14 complete</span> <span class="t-output">(3m 12s)</span><br><br>
+
+        <span class="t-cyan t-bold">[PHASE 4: BUILD]</span> <span class="t-output">Launching 14 Sonnet builders...</span><br>
+        <span class="t-output">  Wave 1: sub-objectives 1-10</span> <span class="t-green">&#10003;</span><br>
+        <span class="t-output">  Wave 2: sub-objectives 11-14</span> <span class="t-green">&#10003;</span><br>
+        <span class="t-green">  &#10003; 14/14 complete</span> <span class="t-output">(5m 33s, 3,200 lines)</span><br><br>
+
+        <span class="t-cyan t-bold">[PHASE 5: WIRE]</span> <span class="t-output">4 Sonnet integrators resolving imports...</span><br>
+        <span class="t-green">  &#10003; 0 conflicts</span> <span class="t-output">(2m 15s)</span><br><br>
+
+        <span class="t-cyan t-bold">[PHASE 6: TEST]</span> <span class="t-output">14 Sonnet testers executing...</span><br>
+        <span class="t-green">  &#10003; 131 tests written, 131 passing, 0 failing</span><br><br>
+
+        <span class="t-purple t-bold">[PHASE 7: REVIEW]</span> <span class="t-output">4 Opus reviewers verifying...</span><br>
+        <span class="t-green">  &#10003; 4/4 APPROVED</span> <span class="t-output">(0 critical findings)</span><br><br>
+
+        <span class="t-purple t-bold">[PHASE 8: INTEGRATION]</span> <span class="t-output">Opus integrator finalizing...</span><br>
+        <span class="t-green">  &#10003; BATTLE-MAP.md written</span><br><br>
+
+        <span class="t-green t-bold">OPERATION COMPLETE</span> <span class="t-output">| 13m 00s | 16 agents | 131 tests | 0 failures</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE OCTOPUS ═══ -->
+<section class="octopus-section" id="how">
+  <div class="container">
+    <div class="section-label">Architecture</div>
+    <div class="section-title">The Nine-Phase Octopus</div>
+    <p class="section-desc" style="margin: 0 auto 1rem; text-align: center;">
+      Nine sequential phases. Each fans out into parallel agents, then collapses into a shared artifact before the next phase begins.
+    </p>
+
+    <div class="phase-grid">
+      <div class="phase-row">
+        <span class="phase-num">Phase 0</span>
+        <span class="phase-name">Recon</span>
+        <span class="phase-tier tier-haiku">HAIKU</span>
+        <span class="phase-time">30s</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 1</span>
+        <span class="phase-name">Strategy</span>
+        <span class="phase-tier tier-opus">OPUS</span>
+        <span class="phase-time">2m</span>
+      </div>
+      <div class="phase-row highlight">
+        <span class="phase-num">Phase 2</span>
+        <span class="phase-name">Decompose (THE MULTIPLIER)</span>
+        <span class="phase-tier tier-opus">OPUS</span>
+        <span class="phase-time">2m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 3</span>
+        <span class="phase-name">Architecture</span>
+        <span class="phase-tier tier-opus">OPUS</span>
+        <span class="phase-time">3m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 4</span>
+        <span class="phase-name">Build</span>
+        <span class="phase-tier tier-sonnet">SONNET</span>
+        <span class="phase-time">5m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 5</span>
+        <span class="phase-name">Wire</span>
+        <span class="phase-tier tier-sonnet">SONNET</span>
+        <span class="phase-time">3m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 6</span>
+        <span class="phase-name">Test</span>
+        <span class="phase-tier tier-sonnet">SONNET</span>
+        <span class="phase-time">3m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 7</span>
+        <span class="phase-name">Review</span>
+        <span class="phase-tier tier-opus">OPUS</span>
+        <span class="phase-time">2m</span>
+      </div>
+      <div class="phase-row">
+        <span class="phase-num">Phase 8</span>
+        <span class="phase-name">Integration</span>
+        <span class="phase-tier tier-opus">OPUS</span>
+        <span class="phase-time">2m</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DECOMPOSER ═══ -->
+<section class="decomposer-section" id="decomposer">
+  <div class="container">
+    <div class="section-label">The Key Innovation</div>
+    <div class="section-title">The Decomposer</div>
+    <div class="section-desc" style="margin: 0 auto;">
+      One Opus agent that sits between strategy and architecture. It reads your objectives and automatically splits each into 2-4 independent parallel work streams. This is where 4 sentences become 60+ agents.
+    </div>
+
+    <div class="decomposer-visual">
+      <div class="decomp-box">
+        <h4>HUMAN INPUT</h4>
+        <div class="decomp-item input">1. Deploy moltbook engine</div>
+        <div class="decomp-item input">2. Build hybrid content</div>
+        <div class="decomp-item input">3. Add lifecycle mgmt</div>
+        <div class="decomp-item input">4. Wire LLM integration</div>
+      </div>
+
+      <div class="decomp-arrow">
+        <div>DECOMPOSER</div>
+        <div class="arrow">&#10132;</div>
+        <div>auto-split</div>
+      </div>
+
+      <div class="decomp-box">
+        <h4>PARALLEL WORK STREAMS</h4>
+        <div class="decomp-item output">A1: Content gen calls</div>
+        <div class="decomp-item output">A2: LLM timeout layer</div>
+        <div class="decomp-item output">A3: Ratio gate logic</div>
+        <div class="decomp-item output">B1: Template engine</div>
+        <div class="decomp-item output">B2: Fallback routing</div>
+        <div class="decomp-item output">B3: Cache layer</div>
+        <div class="decomp-item output">C1: State machine</div>
+        <div class="decomp-item output">C2: Expiration worker</div>
+        <div class="decomp-item output">C3: Status API</div>
+        <div class="decomp-item output">D1: Client wrapper</div>
+        <div class="decomp-item output">D2: Retry logic</div>
+        <div class="decomp-item output">D3: Health monitor</div>
+      </div>
+    </div>
+
+    <div class="decomp-math">
+      4 objectives &times; 3 avg subs &times; 5 agents each = <strong>60+ agents</strong> from <strong>4 sentences</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AGENT HIERARCHY ═══ -->
+<section class="hierarchy-section" id="agents">
+  <div class="container">
+    <div class="section-label">Agent Architecture</div>
+    <div class="section-title">Three Tiers. Clear Authority.</div>
+    <div class="section-desc">
+      Expensive models think. Mid-range models build. Cheap models scan. Each tier has defined permissions and boundaries.
+    </div>
+
+    <div class="tier-cards">
+      <div class="tier-card opus">
+        <h3>Tier 1: Command</h3>
+        <h4>Opus, Think</h4>
+        <p>Strategic agents. Read-only. Never write code. See the big picture, make architectural decisions.</p>
+        <ul>
+          <li>Strategist</li>
+          <li>Decomposer</li>
+          <li>Integrator</li>
+          <li>System Architect</li>
+          <li>Security Architect</li>
+          <li>Code Reviewer</li>
+          <li>Architecture Reviewer</li>
+        </ul>
+      </div>
+
+      <div class="tier-card sonnet">
+        <h3>Tier 2: Operations</h3>
+        <h4>Sonnet, Build</h4>
+        <p>Implementation agents. Full permissions. The workhorse. Deep execution on focused tasks.</p>
+        <ul>
+          <li>Backend Builder</li>
+          <li>Frontend Builder</li>
+          <li>API Builder</li>
+          <li>Import Wirer</li>
+          <li>Config Wirer</li>
+          <li>Unit Tester</li>
+          <li>Integration Tester</li>
+        </ul>
+      </div>
+
+      <div class="tier-card haiku">
+        <h3>Tier 3: Recon</h3>
+        <h4>Haiku, Scan</h4>
+        <p>Fast scouts. Read-only. Quick in, quick out. Cheap and expendable. Use liberally.</p>
+        <ul>
+          <li>File Scanner</li>
+          <li>Dependency Checker</li>
+          <li>Log Analyzer</li>
+          <li>Health Checker</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OPERATIONS ═══ -->
+<section class="ops-section" id="operations">
+  <div class="container">
+    <div class="section-label">Pre-Built Templates</div>
+    <div class="section-title">Nine Operations, Ready to Deploy</div>
+    <div class="section-desc">
+      Copy a template into your project's .claude/commands/ folder. Edit the objectives. Run the command. Read the battle map.
+    </div>
+
+    <div class="ops-grid">
+      <div class="op-card">
+        <h4>/feature-deploy</h4>
+        <p>Deploy N features in parallel with full test coverage. The flagship OPBLITZ pattern.</p>
+        <div class="op-meta">9 phases, full octopus, decomposer included</div>
+      </div>
+      <div class="op-card">
+        <h4>/security-audit</h4>
+        <p>Full security sweep. OWASP checks, dependency audit, attack surface mapping.</p>
+        <div class="op-meta">6 phases, severity-rated output</div>
+      </div>
+      <div class="op-card">
+        <h4>/codebase-migration</h4>
+        <p>Migrate between frameworks or versions. Scan, transform, verify per module.</p>
+        <div class="op-meta">7 phases, per-module parallel transforms</div>
+      </div>
+      <div class="op-card">
+        <h4>/test-blitz</h4>
+        <p>Write comprehensive tests for the entire codebase. One tester per module.</p>
+        <div class="op-meta">5 phases, coverage-tracked</div>
+      </div>
+      <div class="op-card">
+        <h4>/refactor-sweep</h4>
+        <p>Refactor N modules simultaneously. Identify smells, transform, verify.</p>
+        <div class="op-meta">6 phases, regression-verified</div>
+      </div>
+      <div class="op-card">
+        <h4>/incident-response</h4>
+        <p>FAST TRACK. Diagnose + fix production incidents. 8 scouts simultaneous.</p>
+        <div class="op-meta">5 phases, skips arch + wire for speed</div>
+      </div>
+      <div class="op-card">
+        <h4>/documentation-sprint</h4>
+        <p>Document everything in parallel. One writer per module.</p>
+        <div class="op-meta">5 phases, accuracy-checked</div>
+      </div>
+      <div class="op-card">
+        <h4>/research-sprint</h4>
+        <p>Research N topics in parallel, synthesize findings into one report.</p>
+        <div class="op-meta">4 phases, non-code operations</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROOF ═══ -->
+<section class="proof-section" id="proof">
+  <div class="container">
+    <div class="section-label">Validated</div>
+    <div class="section-title">Operation OPBLITZ3</div>
+    <p class="section-desc" style="margin: 0 auto 1rem; text-align: center;">
+      The first field deployment. One operator, 16 agents, 4 features, 13 minutes.
+    </p>
+
+    <div class="proof-table">
+      <div class="proof-row">
+        <span class="proof-label">Human input</span>
+        <span class="proof-value">4 sentences</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Agents deployed</span>
+        <span class="proof-value">16</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Features implemented</span>
+        <span class="proof-value">4</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Tests written</span>
+        <span class="proof-value">131</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Tests passing</span>
+        <span class="proof-value">131 / 131</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Wall clock time</span>
+        <span class="proof-value">13 minutes</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Sequential estimate</span>
+        <span class="proof-value">4-6 hours</span>
+      </div>
+      <div class="proof-row">
+        <span class="proof-label">Cognitive compression</span>
+        <span class="proof-value">200x</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to <span class="gradient">command</span>?</h2>
+    <p>Open source. Zero dependencies beyond Claude Code. Copy the agents, pick an operation, deploy.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="btn btn-primary">View on GitHub</a>
+      <a href="whitepaper.html" class="btn btn-ghost">Read the Whitepaper</a>
+      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/BATTLE-MAP-OPBLITZ3.md" target="_blank" class="btn btn-ghost">View Battle Map</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <p>
-    CommandCC &middot; Apache 2.0 License &middot;
-    <a href="https://github.com/dcarranza-cc/commandcc">GitHub</a> &middot;
-    Built by AXL Protocol
-  </p>
-  <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-    Command Claude Code. Conquer.
-  </p>
+  <div class="footer-links">
+    <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
+    <a href="whitepaper.html">Whitepaper</a>
+    <a href="https://github.com/dcarranza-cc/commandcc/blob/main/docs/getting-started.md" target="_blank">Docs</a>
+    <a href="https://github.com/dcarranza-cc/commandcc/releases" target="_blank">Releases</a>
+  </div>
+  <p>CommandCC &middot; Apache 2.0 &middot; Built by <a href="https://github.com/dcarranza-cc" target="_blank">AXL Protocol</a></p>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-(async function() {
-  const container = document.getElementById('paper-content');
-  const loading = document.getElementById('loading');
-
-  try {
-    // Try fetching the whitepaper from the repo
-    const paths = [
-      '../WHITEPAPER.md',
-      'https://raw.githubusercontent.com/dcarranza-cc/commandcc/main/WHITEPAPER.md'
-    ];
-
-    let md = null;
-    for (const path of paths) {
-      try {
-        const res = await fetch(path);
-        if (res.ok) {
-          md = await res.text();
-          break;
-        }
-      } catch(e) { /* try next */ }
-    }
-
-    if (!md) {
-      loading.innerHTML = 'Could not load whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
-      return;
-    }
-
-    // Render markdown
-    marked.setOptions({
-      gfm: true,
-      breaks: false,
-      headerIds: true
-    });
-
-    container.innerHTML = marked.parse(md);
-  } catch(e) {
-    loading.innerHTML = 'Error loading whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
-  }
-})();
-</script>
 
 </body>
 </html>
