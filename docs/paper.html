@@ -4,1153 +4,798 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Primary SEO -->
-  <title>Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration</title>
-  <meta name="description" content="We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts.">
-  <meta name="keywords" content="AI agent orchestration, multi-agent systems, Claude Code, parallel execution, LLM coordination, command and control, file-based coordination, decomposer pattern, subagent management, quantumized execution">
-  <meta name="author" content="Diego Carranza">
+  <title>How CommandCC Works - Deploy 60+ AI Agents From 4 Sentences</title>
+  <meta name="description" content="A visual explainer of how CommandCC lets one human command 16-128 AI agents in parallel. Learn the Decomposer pattern, the three-tier agent hierarchy, and the nine-phase octopus that turns 4 sentences into 60+ coordinated agents.">
+  <meta name="keywords" content="CommandCC, Claude Code, AI agent orchestration, multi-agent systems, parallel execution, decomposer pattern, LLM coordination, how it works, AI automation, subagent management, quantumized execution, Opus, Sonnet, Haiku">
+  <meta name="author" content="Diego Carranza, AXL Protocol">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://commandcc.ai/paper.html">
 
-  <!-- Open Graph -->
+  <meta property="og:title" content="How CommandCC Works - 4 Sentences to 60+ Agents">
+  <meta property="og:description" content="A visual explainer of how one human commands 16-128 AI agents in parallel using the Decomposer pattern and nine-phase octopus.">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
-  <meta property="og:description" content="We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces a three-tier agent hierarchy, the Decomposer pattern, and a file-based coordination protocol that eliminates inter-agent message passing.">
   <meta property="og:url" content="https://commandcc.ai/paper.html">
   <meta property="og:site_name" content="CommandCC">
   <meta property="article:published_time" content="2026-04-02">
   <meta property="article:author" content="Diego Carranza">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
-  <meta name="twitter:description" content="CommandCC: 16 to 128 AI agents from one terminal. Three-tier hierarchy, automated decomposition, file-based coordination. 16 agents, 4 features, 131 tests, 13 minutes.">
+  <meta name="twitter:title" content="How CommandCC Works - 4 Sentences to 60+ Agents">
+  <meta name="twitter:description" content="A visual explainer of how one human commands 16-128 AI agents in parallel.">
 
-  <!-- Google Scholar / Citation meta tags -->
-  <meta name="citation_title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
-  <meta name="citation_author" content="Carranza, Diego">
-  <meta name="citation_date" content="2026/04/02">
-  <meta name="citation_pdf_url" content="https://commandcc.ai/paper.html">
-  <meta name="citation_abstract_html_url" content="https://commandcc.ai/paper.html">
-  <meta name="citation_publisher" content="AXL Protocol">
-
-  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "name": "Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration",
-    "headline": "Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration",
-    "author": {
-      "@type": "Person",
-      "name": "Diego Carranza",
-      "affiliation": {
-        "@type": "Organization",
-        "name": "AXL Protocol Research"
-      }
-    },
+    "@type": "Article",
+    "headline": "How CommandCC Works: Deploy 60+ AI Agents From 4 Sentences",
+    "author": { "@type": "Person", "name": "Diego Carranza" },
+    "publisher": { "@type": "Organization", "name": "AXL Protocol" },
     "datePublished": "2026-04-02",
-    "publisher": {
-      "@type": "Organization",
-      "name": "AXL Protocol"
-    },
-    "abstract": "We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts. In our validation operation (OPBLITZ3), one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes of wall-clock time, representing an estimated 200x reduction in human cognitive load compared to sequential implementation.",
-    "keywords": [
-      "AI agent orchestration",
-      "multi-agent systems",
-      "Claude Code",
-      "parallel execution",
-      "LLM coordination",
-      "command and control",
-      "file-based coordination",
-      "decomposer pattern",
-      "subagent management",
-      "quantumized execution"
-    ],
+    "description": "A visual explainer of how CommandCC lets one human command 16-128 AI agents in parallel.",
     "url": "https://commandcc.ai/paper.html",
-    "inLanguage": "en"
+    "mainEntityOfPage": "https://commandcc.ai/paper.html"
   }
   </script>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Source+Sans+3:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== CSS CUSTOM PROPERTIES ===== */
     :root {
-      --paper-white: #ffffff;
-      --page-bg: #f0ede8;
-      --text-primary: #1a1a1a;
-      --text-secondary: #444444;
-      --text-muted: #777777;
-      --text-light: #999999;
-      --border-light: #e0ddd8;
-      --border-medium: #c8c4be;
-      --accent-blue: #1a4f8a;
-      --accent-blue-light: #2563a8;
-      --accent-rule: #3a6ea5;
-      --code-bg: #f5f4f2;
-      --code-border: #dddad6;
-      --table-head-bg: #f0ede8;
-      --table-stripe: #f8f7f5;
-      --banner-bg: #1c2b3a;
-      --banner-text: #d4dde8;
-      --banner-link: #7eb8e8;
-      --banner-link-hover: #aad4f5;
-      --toc-bg: #faf9f7;
-      --toc-border: #e0ddd8;
-      --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-      --sans: 'Source Sans 3', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-      --mono: 'Source Code Pro', 'Consolas', 'Monaco', 'Courier New', monospace;
-      --content-width: 720px;
-      --sidebar-width: 240px;
-      --gap: 40px;
+      --bg: #050810;
+      --surface: #0c1322;
+      --surface2: #121d30;
+      --surface3: #182540;
+      --border: #1c2d45;
+      --text: #e8edf5;
+      --text-dim: #8b99b0;
+      --text-muted: #5a6a82;
+      --cyan: #22d3ee;
+      --cyan-glow: rgba(34,211,238,0.08);
+      --green: #4ade80;
+      --green-glow: rgba(74,222,128,0.08);
+      --purple: #a78bfa;
+      --purple-glow: rgba(167,139,250,0.08);
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
     }
 
-    /* ===== RESET ===== */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-    }
-
-    /* ===== TOP BANNER ===== */
-    #top-banner {
-      background: var(--banner-bg);
-      color: var(--banner-text);
-      padding: 0.6rem 1.5rem;
-      font-family: var(--sans);
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      border-bottom: 1px solid #2e4560;
-    }
-
-    #top-banner .banner-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    #top-banner .banner-logo {
-      font-weight: 700;
-      font-size: 0.9rem;
-      letter-spacing: 0.08em;
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    #top-banner .banner-sep {
-      color: #4a6580;
-    }
-
-    #top-banner .banner-tagline {
-      color: var(--banner-text);
-      opacity: 0.7;
-    }
-
-    #top-banner .banner-links {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    #top-banner .banner-links a {
-      color: var(--banner-link);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: color 0.15s;
-    }
-
-    #top-banner .banner-links a:hover {
-      color: var(--banner-link-hover);
-    }
-
-    /* ===== PAGE LAYOUT ===== */
     body {
-      background: var(--page-bg);
-      color: var(--text-primary);
-      font-family: var(--serif);
-      line-height: 1.72;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    #layout {
-      display: flex;
-      max-width: calc(var(--content-width) + var(--sidebar-width) + var(--gap) + 80px);
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-      gap: var(--gap);
-      align-items: flex-start;
+    /* ═══ NAV ═══ */
+    .topnav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(5,8,16,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav-inner {
+      max-width: 1100px; margin: 0 auto; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .topnav a { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+    .topnav a:hover { color: var(--cyan); }
+    .topnav .brand { font-family: var(--mono); font-weight: 700; color: var(--cyan); letter-spacing: 2px; font-size: 0.9rem; }
+    .topnav .links { display: flex; gap: 1.5rem; }
+
+    /* ═══ LAYOUT ═══ */
+    .post { max-width: 820px; margin: 0 auto; padding: 100px 2rem 6rem; }
+
+    /* ═══ HERO ═══ */
+    .post-hero { margin-bottom: 5rem; }
+    .post-tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.7rem;
+      color: var(--cyan); border: 1px solid rgba(34,211,238,0.3);
+      padding: 0.25rem 0.75rem; border-radius: 100px;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .post-hero h1 {
+      font-size: 3.2rem; font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.5px; margin-bottom: 1.5rem;
+    }
+    .post-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .post-lead {
+      font-size: 1.2rem; color: var(--text-dim); line-height: 1.7;
+      max-width: 640px;
+    }
+    .post-meta {
+      margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted);
+      font-family: var(--mono);
     }
 
-    /* ===== SIDEBAR TOC ===== */
-    #toc-sidebar {
-      width: var(--sidebar-width);
-      flex-shrink: 0;
-      position: sticky;
-      top: calc(2.5rem + 40px);
-      max-height: calc(100vh - 120px);
-      overflow-y: auto;
-      background: var(--toc-bg);
-      border: 1px solid var(--toc-border);
-      border-radius: 4px;
-      padding: 1.1rem 1rem;
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      line-height: 1.5;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border-medium) transparent;
+    /* ═══ SECTIONS ═══ */
+    .section { margin-bottom: 6rem; }
+    .section-num {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--cyan);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
     }
-
-    #toc-sidebar::-webkit-scrollbar {
-      width: 4px;
+    .section-num::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
     }
-
-    #toc-sidebar::-webkit-scrollbar-thumb {
-      background: var(--border-medium);
-      border-radius: 2px;
+    .section h2 {
+      font-size: 2rem; font-weight: 800; margin-bottom: 1rem;
+      letter-spacing: -0.5px;
     }
-
-    #toc-sidebar h2 {
-      font-family: var(--sans);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.8rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 1px solid var(--toc-border);
+    .section p {
+      color: var(--text-dim); font-size: 1.02rem; margin-bottom: 1.25rem;
+      max-width: 680px;
     }
+    .section p strong { color: var(--text); font-weight: 600; }
 
-    #toc-sidebar ul {
-      list-style: none;
+    /* ═══ PROBLEM VISUAL ═══ */
+    .problem-grid {
+      display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0;
+      align-items: center; margin: 2.5rem 0;
     }
-
-    #toc-sidebar ul ul {
-      padding-left: 0.9rem;
-      margin-top: 0.1rem;
+    .problem-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; text-align: center;
     }
+    .problem-box h4 { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+    .problem-box .big { font-family: var(--mono); font-size: 2.5rem; font-weight: 800; line-height: 1; }
+    .problem-box .sub { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem; }
+    .problem-box.bad { border-color: rgba(248,113,113,0.3); }
+    .problem-box.bad .big { color: var(--red); }
+    .problem-box.good { border-color: rgba(74,222,128,0.3); }
+    .problem-box.good .big { color: var(--green); }
+    .problem-arrow { text-align: center; font-size: 1.5rem; color: var(--cyan); }
 
-    #toc-sidebar li {
-      margin-bottom: 0.15rem;
+    /* ═══ HOW CARDS ═══ */
+    .how-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2.5rem; margin: 2rem 0;
+      position: relative; overflow: hidden;
     }
+    .how-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .how-card.cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+    .how-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+    .how-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
 
-    #toc-sidebar a {
-      color: var(--text-secondary);
-      text-decoration: none;
+    .how-card .card-label {
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .how-card.cyan .card-label { color: var(--cyan); }
+    .how-card.green .card-label { color: var(--green); }
+    .how-card.purple .card-label { color: var(--purple); }
+
+    .how-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .how-card p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 0; }
+
+    /* ═══ FLOW DIAGRAM ═══ */
+    .flow {
+      margin: 3rem 0; display: flex; flex-direction: column; gap: 0;
+    }
+    .flow-step {
+      display: grid; grid-template-columns: 100px 3px 1fr; gap: 0;
+      min-height: 80px;
+    }
+    .flow-phase {
+      text-align: right; padding-right: 1.25rem; padding-top: 0.75rem;
+    }
+    .flow-phase .num {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted);
       display: block;
-      padding: 0.12rem 0;
-      border-radius: 2px;
-      transition: color 0.15s;
     }
-
-    #toc-sidebar a:hover {
-      color: var(--accent-blue);
+    .flow-phase .time {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted);
     }
-
-    #toc-sidebar a.toc-active {
-      color: var(--accent-blue);
-      font-weight: 600;
+    .flow-line {
+      position: relative; background: var(--border);
     }
-
-    #toc-sidebar .toc-section {
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.78rem;
+    .flow-line::before {
+      content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 11px; height: 11px; border-radius: 50%; border: 2px solid;
     }
+    .flow-step.haiku .flow-line::before { border-color: var(--green); background: var(--bg); }
+    .flow-step.opus .flow-line::before { border-color: var(--purple); background: var(--bg); }
+    .flow-step.sonnet .flow-line::before { border-color: var(--cyan); background: var(--bg); }
+    .flow-step.special .flow-line::before { border-color: var(--yellow); background: var(--yellow); box-shadow: 0 0 12px rgba(251,191,36,0.4); }
 
-    #toc-sidebar .toc-subsection {
-      font-size: 0.73rem;
-      color: var(--text-muted);
+    .flow-step:first-child .flow-line { border-radius: 3px 3px 0 0; }
+    .flow-step:last-child .flow-line { border-radius: 0 0 3px 3px; }
+
+    .flow-content {
+      padding: 0.5rem 0 1.75rem 1.25rem;
     }
-
-    /* ===== PAPER CONTAINER ===== */
-    #paper-container {
-      flex: 1;
-      min-width: 0;
-      max-width: var(--content-width);
+    .flow-content h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .flow-content .desc { font-size: 0.82rem; color: var(--text-dim); }
+    .flow-content .agents {
+      display: inline-flex; gap: 0.3rem; margin-top: 0.4rem; flex-wrap: wrap;
     }
-
-    /* ===== PAPER CHROME ===== */
-    #paper-wrapper {
-      background: var(--paper-white);
-      box-shadow:
-        0 1px 3px rgba(0,0,0,0.08),
-        0 4px 16px rgba(0,0,0,0.10),
-        0 8px 40px rgba(0,0,0,0.08);
-      border-radius: 3px;
+    .flow-content .agent-pill {
+      font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem;
+      border-radius: 4px; font-weight: 600;
     }
+    .pill-haiku { background: rgba(74,222,128,0.12); color: var(--green); }
+    .pill-opus { background: rgba(167,139,250,0.12); color: var(--purple); }
+    .pill-sonnet { background: rgba(34,211,238,0.12); color: var(--cyan); }
+    .pill-special { background: rgba(251,191,36,0.15); color: var(--yellow); }
 
-    /* ===== PAPER CONTENT ===== */
-    #paper-body {
-      padding: 72px 80px 60px;
+    /* ═══ DECOMPOSER VISUAL ═══ */
+    .decomp-demo {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin: 2.5rem 0;
     }
-
-    /* ===== TYPOGRAPHY: PAPER HEADER ===== */
-    #paper-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      padding-bottom: 2rem;
-      border-bottom: 2px solid var(--text-primary);
+    .decomp-header {
+      background: var(--surface2); padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted);
     }
-
-    #paper-header .paper-title {
-      font-family: var(--sans);
-      font-size: 1.55rem;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--text-primary);
-      margin-bottom: 1.25rem;
-      letter-spacing: -0.01em;
+    .decomp-body { padding: 2rem; }
+    .decomp-row {
+      display: grid; grid-template-columns: 1fr 50px 1fr; gap: 0;
+      align-items: start; margin-bottom: 1.5rem;
     }
-
-    #paper-header .paper-author {
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
+    .decomp-row:last-child { margin-bottom: 0; }
+    .decomp-input {
+      font-family: var(--mono); font-size: 0.85rem; color: var(--text);
+      padding: 0.6rem 1rem; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px;
     }
-
-    #paper-header .paper-affiliation {
-      font-family: var(--sans);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.2rem;
+    .decomp-input .obj-num { color: var(--purple); font-weight: 700; }
+    .decomp-mid {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--yellow); font-size: 1.2rem; padding-top: 0.4rem;
     }
-
-    #paper-header .paper-date {
-      font-family: var(--sans);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
+    .decomp-outputs { display: flex; flex-direction: column; gap: 0.35rem; }
+    .decomp-out {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--cyan);
+      padding: 0.35rem 0.75rem; background: rgba(34,211,238,0.06);
+      border: 1px solid rgba(34,211,238,0.15); border-radius: 6px;
     }
-
-    #paper-header .paper-contact {
-      font-family: var(--sans);
-      font-size: 0.82rem;
-      color: var(--text-muted);
+    .decomp-total {
+      text-align: center; padding: 1.25rem; background: var(--surface2);
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.9rem; color: var(--text-dim);
     }
+    .decomp-total strong { color: var(--yellow); font-size: 1.1rem; }
 
-    #paper-header .paper-contact a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
-
-    /* ===== ABSTRACT ===== */
-    #abstract-section {
-      margin-bottom: 2.5rem;
-      padding: 0;
-    }
-
-    #abstract-section .abstract-label {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 0.6rem;
-    }
-
-    .abstract-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      column-gap: 2rem;
-      font-size: 0.88rem;
-      line-height: 1.65;
-      color: var(--text-secondary);
-      text-align: justify;
-      border-top: 1px solid var(--border-medium);
-      border-bottom: 1px solid var(--border-medium);
-      padding: 1rem 0;
-    }
-
-    .abstract-columns .abstract-text {
-      column-count: 1;
-    }
-
-    /* ===== SECTION HEADINGS ===== */
-    #paper-rendered h1 {
-      display: none; /* Title is in the header, not rendered inline */
-    }
-
-    #paper-rendered h2 {
-      font-family: var(--sans);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-top: 2.8rem;
-      margin-bottom: 0.8rem;
-      padding-bottom: 0.3rem;
-      border-bottom: 1px solid var(--border-light);
-      counter-increment: none;
-      letter-spacing: -0.01em;
-    }
-
-    #paper-rendered h3 {
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-top: 1.8rem;
-      margin-bottom: 0.6rem;
-      letter-spacing: -0.005em;
-    }
-
-    #paper-rendered h4 {
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-top: 1.4rem;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ===== BODY TEXT ===== */
-    #paper-rendered p {
-      font-size: 0.95rem;
-      line-height: 1.75;
-      margin-bottom: 0.9rem;
-      text-align: justify;
-      hyphens: auto;
-      color: var(--text-primary);
-    }
-
-    #paper-rendered > p:first-of-type::first-letter {
-      /* No drop cap, keep it clean */
-    }
-
-    /* ===== EMPHASIS ===== */
-    #paper-rendered strong {
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    #paper-rendered em {
-      font-style: italic;
-      color: var(--text-secondary);
-    }
-
-    /* ===== LISTS ===== */
-    #paper-rendered ol,
-    #paper-rendered ul {
-      margin: 0.6rem 0 1rem 1.6rem;
-      font-size: 0.93rem;
-    }
-
-    #paper-rendered li {
-      margin-bottom: 0.35rem;
-      line-height: 1.65;
-    }
-
-    #paper-rendered li p {
-      margin-bottom: 0.2rem;
-    }
-
-    /* ===== CODE ===== */
-    #paper-rendered code {
-      font-family: var(--mono);
-      font-size: 0.82em;
-      background: var(--code-bg);
-      border: 1px solid var(--code-border);
-      border-radius: 2px;
-      padding: 0.1em 0.35em;
-      color: #2d3748;
-    }
-
-    #paper-rendered pre {
-      background: var(--code-bg);
-      border: 1px solid var(--code-border);
-      border-radius: 3px;
-      padding: 1rem 1.2rem;
-      margin: 1rem 0 1.2rem;
-      overflow-x: auto;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      line-height: 1.6;
-      color: var(--text-primary);
-    }
-
-    #paper-rendered pre code {
-      background: none;
-      border: none;
-      padding: 0;
-      font-size: inherit;
-      color: inherit;
-    }
-
-    /* ===== TABLES (LaTeX-style) ===== */
-    #paper-rendered table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.2rem 0;
-      font-family: var(--sans);
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
-
-    #paper-rendered thead {
-      border-top: 2px solid var(--text-primary);
-      border-bottom: 1px solid var(--text-primary);
-    }
-
-    #paper-rendered th {
-      text-align: left;
-      font-weight: 600;
-      padding: 0.45rem 0.75rem;
-      color: var(--text-primary);
-      background: transparent;
-      white-space: nowrap;
-    }
-
-    #paper-rendered td {
-      padding: 0.4rem 0.75rem;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    #paper-rendered tr:last-child td {
-      border-bottom: none;
-    }
-
-    #paper-rendered tbody tr:nth-child(even) td {
-      background: var(--table-stripe);
-    }
-
-    #paper-rendered tfoot {
-      border-top: 1px solid var(--text-primary);
-    }
-
-    /* Add bottom border to last row of table */
-    #paper-rendered table {
-      border-bottom: 2px solid var(--text-primary);
-    }
-
-    /* Table caption */
-    .table-caption {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: -0.8rem;
-      margin-bottom: 1.2rem;
-      font-style: italic;
-    }
-
-    /* ===== HORIZONTAL RULES ===== */
-    #paper-rendered hr {
-      border: none;
-      border-top: 1px solid var(--border-light);
+    /* ═══ TIER STRIP ═══ */
+    .tier-strip {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
       margin: 2.5rem 0;
     }
+    .tier-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.75rem; text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .tier-item:hover { transform: translateY(-3px); }
+    .tier-item.t-opus { border-top: 3px solid var(--purple); }
+    .tier-item.t-opus:hover { border-color: var(--purple); }
+    .tier-item.t-sonnet { border-top: 3px solid var(--cyan); }
+    .tier-item.t-sonnet:hover { border-color: var(--cyan); }
+    .tier-item.t-haiku { border-top: 3px solid var(--green); }
+    .tier-item.t-haiku:hover { border-color: var(--green); }
 
-    /* ===== BLOCKQUOTES ===== */
-    #paper-rendered blockquote {
-      border-left: 3px solid var(--accent-rule);
-      margin: 1rem 0;
-      padding: 0.5rem 1rem;
-      font-style: italic;
-      color: var(--text-secondary);
-      background: #f7f6f4;
+    .tier-item .tier-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .tier-item h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .tier-item .tier-model { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .tier-item.t-opus .tier-model { color: var(--purple); }
+    .tier-item.t-sonnet .tier-model { color: var(--cyan); }
+    .tier-item.t-haiku .tier-model { color: var(--green); }
+    .tier-item p { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0; }
+    .tier-item .tier-perm {
+      display: inline-block; font-family: var(--mono); font-size: 0.65rem;
+      padding: 0.15rem 0.5rem; border-radius: 4px; margin-top: 0.75rem;
+    }
+    .tier-item.t-opus .tier-perm { background: rgba(167,139,250,0.1); color: var(--purple); }
+    .tier-item.t-sonnet .tier-perm { background: rgba(34,211,238,0.1); color: var(--cyan); }
+    .tier-item.t-haiku .tier-perm { background: rgba(74,222,128,0.1); color: var(--green); }
+
+    /* ═══ MATH CALLOUT ═══ */
+    .math-callout {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 2.5rem; text-align: center; margin: 3rem 0;
+    }
+    .math-callout .equation {
+      font-family: var(--mono); font-size: 1.1rem; color: var(--text);
+      margin-bottom: 0.75rem; line-height: 2;
+    }
+    .math-callout .result {
+      font-size: 2rem; font-weight: 900; margin-top: 1rem;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .math-callout .note { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+    /* ═══ RESULT BAR ═══ */
+    .result-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .result-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.25rem; text-align: center;
+    }
+    .result-item .val {
+      font-family: var(--mono); font-size: 1.8rem; font-weight: 800;
+      color: var(--cyan); display: block; line-height: 1;
+    }
+    .result-item .lbl {
+      font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 1.5px; margin-top: 0.5rem;
     }
 
-    /* ===== LINKS ===== */
-    #paper-rendered a {
-      color: var(--accent-blue);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.15s;
+    /* ═══ LESSON CARD ═══ */
+    .lesson {
+      background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 12px; padding: 2rem; margin: 2rem 0;
     }
+    .lesson h4 { color: var(--yellow); font-size: 0.85rem; font-family: var(--mono); letter-spacing: 1px; margin-bottom: 0.75rem; }
+    .lesson p { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 0; }
 
-    #paper-rendered a:hover {
-      border-bottom-color: var(--accent-blue);
+    /* ═══ CTA BOX ═══ */
+    .cta-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 3rem; text-align: center; margin-top: 4rem;
     }
-
-    /* ===== CITE THIS PAPER ===== */
-    #cite-section {
-      background: var(--paper-white);
-      border-top: 2px solid var(--border-light);
-      padding: 2rem 80px 2.5rem;
+    .cta-box h2 {
+      font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem;
     }
-
-    #cite-section h2 {
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 1px solid var(--border-light);
+    .cta-box h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
-    .cite-formats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+    .cta-box p { color: var(--text-dim); margin-bottom: 2rem; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.9rem;
+      font-weight: 600; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
     }
+    .btn-cyan { background: var(--cyan); color: var(--bg); }
+    .btn-cyan:hover { background: var(--green); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
 
-    .cite-format-block {
-      border: 1px solid var(--border-light);
-      border-radius: 4px;
-      overflow: hidden;
+    /* ═══ FOOTER ═══ */
+    .post-footer {
+      text-align: center; padding: 3rem 0; margin-top: 4rem;
+      border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted);
     }
+    .post-footer a { color: var(--cyan); text-decoration: none; }
 
-    .cite-format-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.5rem 0.8rem;
-      background: var(--table-head-bg);
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .cite-format-label {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .cite-copy-btn {
-      font-family: var(--sans);
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--accent-blue);
-      background: transparent;
-      border: 1px solid var(--accent-blue);
-      border-radius: 3px;
-      padding: 0.2rem 0.6rem;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .cite-copy-btn:hover {
-      background: var(--accent-blue);
-      color: white;
-    }
-
-    .cite-copy-btn.copied {
-      background: #2e7d32;
-      border-color: #2e7d32;
-      color: white;
-    }
-
-    .cite-text {
-      padding: 0.8rem;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      background: #fdfcfb;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .cite-apa {
-      font-family: var(--serif);
-      font-size: 0.82rem;
-      line-height: 1.65;
-      padding: 0.8rem;
-      color: var(--text-secondary);
-      background: #fdfcfb;
-    }
-
-    /* ===== PAGE FOOTER ===== */
-    #page-footer {
-      text-align: center;
-      padding: 2rem 1.5rem;
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      color: var(--text-light);
-    }
-
-    #page-footer a {
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-
-    #page-footer a:hover {
-      color: var(--accent-blue);
-    }
-
-    /* ===== LOADING STATE ===== */
-    #loading-state {
-      padding: 4rem 2rem;
-      text-align: center;
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
-    /* ===== PRINT STYLESHEET ===== */
-    @media print {
-      #top-banner,
-      #toc-sidebar,
-      #cite-section,
-      #page-footer {
-        display: none !important;
-      }
-
-      body {
-        background: white;
-        font-size: 10.5pt;
-      }
-
-      #layout {
-        display: block;
-        padding: 0;
-        max-width: 100%;
-      }
-
-      #paper-container {
-        max-width: 100%;
-      }
-
-      #paper-wrapper {
-        box-shadow: none;
-        border-radius: 0;
-      }
-
-      #paper-body {
-        padding: 1.5cm 2cm 2cm;
-      }
-
-      #paper-rendered h2 {
-        page-break-after: avoid;
-        margin-top: 1.8rem;
-      }
-
-      #paper-rendered h3 {
-        page-break-after: avoid;
-      }
-
-      #paper-rendered pre,
-      #paper-rendered table {
-        page-break-inside: avoid;
-      }
-
-      #paper-rendered p {
-        font-size: 10.5pt;
-        line-height: 1.65;
-        text-align: justify;
-        orphans: 3;
-        widows: 3;
-      }
-
-      #paper-rendered a {
-        color: inherit;
-        border: none;
-      }
-
-      .abstract-columns {
-        font-size: 9.5pt;
-      }
-
-      #paper-header .paper-title {
-        font-size: 16pt;
-      }
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1100px) {
-      :root {
-        --sidebar-width: 200px;
-        --gap: 28px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      #toc-sidebar {
-        display: none;
-      }
-
-      #layout {
-        display: block;
-        padding: 1.5rem 1rem 3rem;
-      }
-
-      #paper-container {
-        max-width: 100%;
-      }
-
-      #paper-body {
-        padding: 2.5rem 2rem 2rem;
-      }
-
-      #cite-section {
-        padding: 1.5rem 2rem 2rem;
-      }
-
-      .cite-formats {
-        grid-template-columns: 1fr;
-      }
-
-      .abstract-columns {
-        grid-template-columns: 1fr;
-      }
-
-      #paper-header .paper-title {
-        font-size: 1.25rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      #top-banner .banner-tagline {
-        display: none;
-      }
-
-      #paper-body {
-        padding: 2rem 1.25rem 1.5rem;
-      }
-
-      #cite-section {
-        padding: 1.5rem 1.25rem;
-      }
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 700px) {
+      .post-hero h1 { font-size: 2.2rem; }
+      .section h2 { font-size: 1.5rem; }
+      .problem-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .problem-arrow { transform: rotate(90deg); }
+      .decomp-row { grid-template-columns: 1fr; gap: 0.75rem; }
+      .decomp-mid { transform: rotate(90deg); padding: 0; }
+      .tier-strip { grid-template-columns: 1fr; }
+      .result-bar { grid-template-columns: repeat(2, 1fr); }
+      .flow-step { grid-template-columns: 70px 3px 1fr; }
+      .math-callout .equation { font-size: 0.85rem; }
+      .math-callout .result { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- Top Banner -->
-<div id="top-banner">
-  <div class="banner-left">
-    <a href="https://commandcc.ai" class="banner-logo">COMMANDCC</a>
-    <span class="banner-sep">/</span>
-    <span class="banner-tagline">Command Claude Code. Conquer.</span>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="/" class="brand">COMMANDCC</a>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="whitepaper.html">Whitepaper</a>
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
+    </div>
   </div>
-  <div class="banner-links">
-    <a href="https://commandcc.ai">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Home
-    </a>
-    <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-      GitHub
-    </a>
-    <a href="whitepaper.html">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Whitepaper
-    </a>
-  </div>
-</div>
+</nav>
 
-<!-- Page Layout -->
-<div id="layout">
+<article class="post">
 
-  <!-- Sidebar TOC -->
-  <nav id="toc-sidebar" aria-label="Table of contents">
-    <h2>Contents</h2>
-    <ul id="toc-list">
-      <!-- Populated by JS -->
-    </ul>
-  </nav>
+  <!-- ═══ HERO ═══ -->
+  <header class="post-hero">
+    <div class="post-tag">How It Works</div>
+    <h1>You type <em>4 sentences</em>.<br>The system deploys <em>60 agents</em>.</h1>
+    <p class="post-lead">
+      CommandCC is a coordination system that lets one human command dozens of AI agents working in parallel on the same codebase. No message passing. No databases. Just files, phases, and a doctrine that scales.
+    </p>
+    <p class="post-lead">
+      Here's exactly how it works.
+    </p>
+    <div class="post-meta">Diego Carranza / AXL Protocol / April 2026 / 8 min read</div>
+  </header>
 
-  <!-- Paper Container -->
-  <main id="paper-container">
-    <article id="paper-wrapper" itemscope itemtype="https://schema.org/ScholarlyArticle">
+  <!-- ═══ 1. THE PROBLEM ═══ -->
+  <section class="section">
+    <div class="section-num">01 The Problem</div>
+    <h2>AI agents are fast. Humans are the bottleneck.</h2>
+    <p>
+      A single AI coding agent can implement a feature in minutes. But a developer working with agents one at a time hits a wall: <strong>they become the serializer</strong>. They define each task, review each output, integrate each result. For every agent added, the human coordination cost grows linearly.
+    </p>
+    <p>
+      The agent is not the bottleneck. <strong>The human is.</strong>
+    </p>
 
-      <div id="paper-body">
+    <div class="problem-grid">
+      <div class="problem-box bad">
+        <h4>Without CommandCC</h4>
+        <div class="big">1:1</div>
+        <div class="sub">One human, one agent at a time.<br>4 features = 4-6 hours.</div>
+      </div>
+      <div class="problem-arrow">&#10132;</div>
+      <div class="problem-box good">
+        <h4>With CommandCC</h4>
+        <div class="big">1:60+</div>
+        <div class="sub">One human, 60+ agents in parallel.<br>4 features = 13 minutes.</div>
+      </div>
+    </div>
 
-        <!-- Static paper header (always shown, never from markdown) -->
-        <header id="paper-header">
-          <h1 class="paper-title" itemprop="name">
-            Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration
-          </h1>
-          <div class="paper-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
-            <span itemprop="name">Diego Carranza</span>
+    <p>
+      The question we answered: <strong>Can one person effectively command dozens of agents on a shared codebase without the coordination overhead destroying the gains?</strong>
+    </p>
+    <p>Yes. With three ideas.</p>
+  </section>
+
+  <!-- ═══ 2. THREE IDEAS ═══ -->
+  <section class="section">
+    <div class="section-num">02 Three Ideas</div>
+    <h2>Hierarchy. Decomposition. Files.</h2>
+
+    <div class="how-card purple">
+      <div class="card-label">Idea 1</div>
+      <h3>Match the model to the job</h3>
+      <p>
+        Not every task needs the most expensive model. Strategic thinking (what to build, how to design it, whether it's good enough) needs the smartest model. Implementation (writing the code, running the tests) needs a fast, capable one. Scanning the codebase needs the cheapest, fastest one. Three tiers, three cost profiles, one clear hierarchy.
+      </p>
+    </div>
+
+    <div class="tier-strip">
+      <div class="tier-item t-opus">
+        <div class="tier-icon">&#9733;</div>
+        <div class="tier-model">OPUS</div>
+        <h4>Think</h4>
+        <p>Strategize, decompose, design, review. Never writes code.</p>
+        <div class="tier-perm">READ-ONLY</div>
+      </div>
+      <div class="tier-item t-sonnet">
+        <div class="tier-icon">&#9881;</div>
+        <div class="tier-model">SONNET</div>
+        <h4>Build</h4>
+        <p>Implement, wire, test. The workhorse. Deep execution.</p>
+        <div class="tier-perm">FULL ACCESS</div>
+      </div>
+      <div class="tier-item t-haiku">
+        <div class="tier-icon">&#9889;</div>
+        <div class="tier-model">HAIKU</div>
+        <h4>Scan</h4>
+        <p>Fast recon. Quick in, quick out. Cheap and expendable.</p>
+        <div class="tier-perm">READ-ONLY</div>
+      </div>
+    </div>
+
+    <div class="how-card cyan">
+      <div class="card-label">Idea 2</div>
+      <h3>Automate the task breakdown</h3>
+      <p>
+        The biggest human bottleneck is decomposition: breaking "deploy moltbook engine" into specific, independent sub-tasks. The <strong>Decomposer</strong> is an Opus-class agent that does this automatically. It reads your high-level objectives and splits each into 2-4 independent sub-objectives. Independence is the key constraint: no sub-objective can depend on another's output, because they all run in parallel.
+      </p>
+    </div>
+
+    <div class="how-card green">
+      <div class="card-label">Idea 3</div>
+      <h3>Coordinate through files, not messages</h3>
+      <p>
+        Agents don't talk to each other. They read files from the previous phase and write files for the next phase. The strategist writes <code>OPERATION-PLAN.md</code>. The decomposer reads it and writes <code>DECOMPOSITION.md</code>. Architects read that and write <code>ARCHITECTURE-A1.md</code>. No chat, no APIs, no message queues. The filesystem is the protocol.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ 3. THE DECOMPOSER ═══ -->
+  <section class="section">
+    <div class="section-num">03 The Decomposer</div>
+    <h2>The multiplication layer</h2>
+    <p>
+      This is the core innovation. Without it, the human manually breaks down every objective. With it, you type 4 sentences and the system generates 12+ independent work streams automatically.
+    </p>
+
+    <div class="decomp-demo">
+      <div class="decomp-header">DECOMPOSER: 4 objectives in, 12 sub-objectives out</div>
+      <div class="decomp-body">
+        <div class="decomp-row">
+          <div class="decomp-input"><span class="obj-num">A.</span> Deploy moltbook engine</div>
+          <div class="decomp-mid">&#10132;</div>
+          <div class="decomp-outputs">
+            <div class="decomp-out">A1: Swap content gen calls</div>
+            <div class="decomp-out">A2: Build timeout + fallback</div>
+            <div class="decomp-out">A3: Wire ratio gate</div>
           </div>
-          <div class="paper-affiliation">AXL Protocol Research</div>
-          <div class="paper-date">
-            <time itemprop="datePublished" datetime="2026-04-02">April 2026</time>
+        </div>
+        <div class="decomp-row">
+          <div class="decomp-input"><span class="obj-num">B.</span> Build hybrid content</div>
+          <div class="decomp-mid">&#10132;</div>
+          <div class="decomp-outputs">
+            <div class="decomp-out">B1: Template engine</div>
+            <div class="decomp-out">B2: Fallback routing</div>
+            <div class="decomp-out">B3: Cache layer</div>
           </div>
-          <div class="paper-contact">
-            <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">github.com/dcarranza-cc/commandcc</a>
+        </div>
+        <div class="decomp-row">
+          <div class="decomp-input"><span class="obj-num">C.</span> Add lifecycle mgmt</div>
+          <div class="decomp-mid">&#10132;</div>
+          <div class="decomp-outputs">
+            <div class="decomp-out">C1: State machine</div>
+            <div class="decomp-out">C2: Expiration worker</div>
+            <div class="decomp-out">C3: Status API</div>
           </div>
-        </header>
-
-        <!-- Abstract (two-column) -->
-        <section id="abstract-section" aria-labelledby="abstract-label">
-          <div class="abstract-label" id="abstract-label">Abstract</div>
-          <div class="abstract-columns" itemprop="description">
-            <div class="abstract-text">
-              We present CommandCC, an open-source orchestration system that enables a single human operator to command 16 to 128 AI coding agents from one terminal session. The system introduces three key contributions: (1) a three-tier agent hierarchy mapped to model capability classes (strategic, operational, reconnaissance), (2) the Decomposer, an automated objective-splitting agent that converts N human-defined objectives into 2N-4N independent parallel work streams, and (3) a file-based coordination protocol that eliminates inter-agent message passing in favor of shared filesystem artifacts.
-            </div>
-            <div class="abstract-text">
-              In our validation operation (OPBLITZ3), one operator deployed 16 agents across 4 phases to implement 4 features with 131 passing tests in 13 minutes of wall-clock time, representing an estimated 200x reduction in human cognitive load compared to sequential implementation. We report the architecture, the coordination protocol, the decomposition algorithm, and the empirical results from the first field deployment.
-            </div>
+        </div>
+        <div class="decomp-row">
+          <div class="decomp-input"><span class="obj-num">D.</span> Wire LLM integration</div>
+          <div class="decomp-mid">&#10132;</div>
+          <div class="decomp-outputs">
+            <div class="decomp-out">D1: Client wrapper</div>
+            <div class="decomp-out">D2: Retry logic</div>
+            <div class="decomp-out">D3: Health monitor</div>
           </div>
-        </section>
+        </div>
+      </div>
+      <div class="decomp-total">
+        4 objectives &times; 3 avg splits = <strong>12 parallel work streams</strong>
+      </div>
+    </div>
 
-        <!-- Paper body (rendered from markdown) -->
-        <section id="paper-rendered">
-          <div id="loading-state">Loading paper&hellip;</div>
-        </section>
+    <p>
+      The Decomposer enforces one hard rule: <strong>no sub-objective can touch the same file as another sub-objective</strong>. If two pieces of work share a dependency, they stay in the same sub-objective. This prevents merge conflicts when 12 builders are writing code simultaneously.
+    </p>
 
-      </div><!-- /#paper-body -->
+    <div class="lesson">
+      <h4>Lesson from the field</h4>
+      <p>In our first operation (OPBLITZ3), two builders both edited the same file, <code>empire1d.py</code>. The edits were logically independent but created a merge conflict. This incident directly led to the Decomposer's file isolation rule. The system now prevents this class of error by design.</p>
+    </div>
+  </section>
 
-      <!-- Cite This Paper -->
-      <div id="cite-section">
-        <h2>Cite This Paper</h2>
-        <div class="cite-formats">
+  <!-- ═══ 4. THE NINE PHASES ═══ -->
+  <section class="section">
+    <div class="section-num">04 The Nine Phases</div>
+    <h2>The octopus</h2>
+    <p>
+      Every operation follows nine sequential phases. Within each phase, agents fan out in parallel (the arms of the octopus), then collapse their work into shared files before the next phase begins (the spine).
+    </p>
 
-          <div class="cite-format-block">
-            <div class="cite-format-header">
-              <span class="cite-format-label">BibTeX</span>
-              <button class="cite-copy-btn" data-target="cite-bibtex">Copy</button>
-            </div>
-            <div class="cite-text" id="cite-bibtex">@article{carranza2026quantumized,
-  title   = {Quantumized Execution: A File-Based Coordination
-             Protocol for Massively Parallel AI Agent Orchestration},
-  author  = {Carranza, Diego},
-  year    = {2026},
-  month   = {April},
-  publisher = {AXL Protocol},
-  url     = {https://commandcc.ai/paper.html}
-}</div>
-          </div>
-
-          <div class="cite-format-block">
-            <div class="cite-format-header">
-              <span class="cite-format-label">APA</span>
-              <button class="cite-copy-btn" data-target="cite-apa">Copy</button>
-            </div>
-            <div class="cite-apa" id="cite-apa">Carranza, D. (2026). Quantumized execution: A file-based coordination protocol for massively parallel AI agent orchestration. AXL Protocol. https://commandcc.ai/paper.html</div>
-          </div>
-
+    <div class="flow">
+      <div class="flow-step haiku">
+        <div class="flow-phase"><span class="num">Phase 0</span><span class="time">30s</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Recon</h4>
+          <div class="desc">4-8 scouts scan the codebase simultaneously. What exists, what's broken, what's the state.</div>
+          <div class="agents"><span class="agent-pill pill-haiku">4-8 HAIKU</span></div>
         </div>
       </div>
 
-    </article><!-- /#paper-wrapper -->
+      <div class="flow-step opus">
+        <div class="flow-phase"><span class="num">Phase 1</span><span class="time">2m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Strategy</h4>
+          <div class="desc">One Opus reads all recon reports. Produces <code>OPERATION-PLAN.md</code> with objectives, phasing, risks.</div>
+          <div class="agents"><span class="agent-pill pill-opus">1 OPUS</span></div>
+        </div>
+      </div>
 
-    <footer id="page-footer">
-      <p>
-        &copy; 2026 Diego Carranza, AXL Protocol &nbsp;&middot;&nbsp;
-        Apache 2.0 License &nbsp;&middot;&nbsp;
-        <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" rel="noopener">GitHub</a>
-        &nbsp;&middot;&nbsp;
-        <a href="https://commandcc.ai">commandcc.ai</a>
-      </p>
-    </footer>
+      <div class="flow-step special">
+        <div class="flow-phase"><span class="num">Phase 2</span><span class="time">2m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Decompose &#x2728;</h4>
+          <div class="desc">The Decomposer splits each objective into 2-4 independent sub-objectives. This is the multiplication step. 4 objectives become 12.</div>
+          <div class="agents"><span class="agent-pill pill-special">1 OPUS (DECOMPOSER)</span></div>
+        </div>
+      </div>
 
-  </main><!-- /#paper-container -->
+      <div class="flow-step opus">
+        <div class="flow-phase"><span class="num">Phase 3</span><span class="time">3m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Architecture</h4>
+          <div class="desc">One Opus architect per sub-objective designs the solution. They read, they think, they never write code.</div>
+          <div class="agents"><span class="agent-pill pill-opus">12 OPUS</span></div>
+        </div>
+      </div>
 
-</div><!-- /#layout -->
+      <div class="flow-step sonnet">
+        <div class="flow-phase"><span class="num">Phase 4</span><span class="time">5m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Build</h4>
+          <div class="desc">One Sonnet builder per sub-objective implements the code. 12 builders writing simultaneously, each on non-overlapping files.</div>
+          <div class="agents"><span class="agent-pill pill-sonnet">12 SONNET</span></div>
+        </div>
+      </div>
 
-<!-- marked.js for Markdown rendering -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-(function() {
-  'use strict';
+      <div class="flow-step sonnet">
+        <div class="flow-phase"><span class="num">Phase 5</span><span class="time">3m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Wire</h4>
+          <div class="desc">One Sonnet per objective wires the sub-objective builds together. Imports, config, initialization hooks.</div>
+          <div class="agents"><span class="agent-pill pill-sonnet">4 SONNET</span></div>
+        </div>
+      </div>
 
-  /* ===== MARKDOWN LOADING ===== */
-  async function loadPaper() {
-    const container = document.getElementById('paper-rendered');
-    const loading = document.getElementById('loading-state');
+      <div class="flow-step sonnet">
+        <div class="flow-phase"><span class="num">Phase 6</span><span class="time">3m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Test</h4>
+          <div class="desc">One Sonnet tester per sub-objective writes and runs tests. They cannot fix, only report.</div>
+          <div class="agents"><span class="agent-pill pill-sonnet">12 SONNET</span></div>
+        </div>
+      </div>
 
-    const paths = [
-      '../WHITEPAPER.md',
-      'https://raw.githubusercontent.com/dcarranza-cc/commandcc/main/WHITEPAPER.md'
-    ];
+      <div class="flow-step opus">
+        <div class="flow-phase"><span class="num">Phase 7</span><span class="time">2m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Review</h4>
+          <div class="desc">One Opus reviewer per objective reads plan + build + wire + test. Approves, rejects, or flags.</div>
+          <div class="agents"><span class="agent-pill pill-opus">4 OPUS</span></div>
+        </div>
+      </div>
 
-    let md = null;
-    for (const path of paths) {
-      try {
-        const res = await fetch(path);
-        if (res.ok) {
-          md = await res.text();
-          break;
-        }
-      } catch (e) { /* try next source */ }
-    }
+      <div class="flow-step opus">
+        <div class="flow-phase"><span class="num">Phase 8</span><span class="time">2m</span></div>
+        <div class="flow-line"></div>
+        <div class="flow-content">
+          <h4>Integration</h4>
+          <div class="desc">One Opus reads everything. Cross-objective checks. Produces the <code>BATTLE-MAP.md</code>, the consolidated result.</div>
+          <div class="agents"><span class="agent-pill pill-opus">1 OPUS</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    if (!md) {
-      loading.innerHTML =
-        'Could not load paper content. ' +
-        '<a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md">Read on GitHub</a>.';
-      return;
-    }
+  <!-- ═══ 5. THE MATH ═══ -->
+  <section class="section">
+    <div class="section-num">05 The Math</div>
+    <h2>From sentences to agents</h2>
+    <p>
+      The human types 4 objectives. Here's how the system expands that into a coordinated fleet:
+    </p>
 
-    // Strip the H1 title, author block, and abstract from the markdown,
-    // since we have a static styled header + abstract block above.
-    // The markdown starts with H1, then author lines, then the abstract paragraph,
-    // then the first HR, then section 1.
-    // We remove everything up to and including the first HR.
-    const firstHr = md.indexOf('\n---\n');
-    if (firstHr !== -1) {
-      md = md.slice(firstHr + 5); // skip past the first HR
-    }
+    <div class="math-callout">
+      <div class="equation">
+        4 objectives &times; 3 subs each = 12 sub-objectives<br>
+        12 sub-objectives &times; 5 agents each (architect + builder + wirer + tester + reviewer)<br>
+        + 8 scouts + 1 strategist + 1 decomposer + 1 integrator
+      </div>
+      <div class="result">= 71 agents from 4 sentences</div>
+      <div class="note">Total wall-clock time: ~22 minutes. Sequential equivalent: 12-16 hours.</div>
+    </div>
 
-    marked.setOptions({
-      gfm: true,
-      breaks: false
-    });
+    <p>
+      The time scales sublinearly: doubling objectives doesn't double time because the extra agents run in parallel. The sequential phases (strategy, decompose, integrate) are fixed overhead regardless of objective count.
+    </p>
+  </section>
 
-    // Use marked with a custom renderer to add IDs to headings for TOC
-    const renderer = new marked.Renderer();
+  <!-- ═══ 6. THE PROOF ═══ -->
+  <section class="section">
+    <div class="section-num">06 The Proof</div>
+    <h2>Operation OPBLITZ3</h2>
+    <p>
+      The first field deployment. One operator typed four objectives for the empire1.io web application. The system deployed 16 agents across 4 phases. This was before the Decomposer existed, so decomposition was manual.
+    </p>
 
-    renderer.heading = function(text, level) {
-      // Strip any HTML tags to get plain text for ID generation
-      const plainText = text.replace(/<[^>]+>/g, '');
-      const id = 'sec-' + plainText
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
-      return '<h' + level + ' id="' + id + '">' + text + '</h' + level + '>\n';
-    };
+    <div class="result-bar">
+      <div class="result-item">
+        <span class="val">16</span>
+        <span class="lbl">Agents</span>
+      </div>
+      <div class="result-item">
+        <span class="val">131</span>
+        <span class="lbl">Tests</span>
+      </div>
+      <div class="result-item">
+        <span class="val">13m</span>
+        <span class="lbl">Wall Clock</span>
+      </div>
+      <div class="result-item">
+        <span class="val">200x</span>
+        <span class="lbl">Compression</span>
+      </div>
+    </div>
 
-    marked.use({ renderer });
+    <p>
+      <strong>The operator typed one command and read one battle map.</strong> The equivalent sequential process would need ~50 context switches (defining tasks, reviewing outputs, debugging integration, re-running tests). That's the 200x cognitive load compression.
+    </p>
+    <p>
+      With the Decomposer now in place, the same 4 objectives would produce 12 sub-objectives and deploy ~71 agents instead of 16. Same human input, 4x more parallelism.
+    </p>
+  </section>
 
-    container.innerHTML = marked.parse(md);
-    loading.remove();
+  <!-- ═══ 7. WHY FILES ═══ -->
+  <section class="section">
+    <div class="section-num">07 Why Files</div>
+    <h2>The filesystem is the protocol</h2>
+    <p>
+      Traditional multi-agent systems use message passing: agents send requests to each other and wait for responses. This creates O(n&sup2;) communication channels for n agents, ordering dependencies, and cascading failures when one agent is slow.
+    </p>
+    <p>
+      CommandCC eliminates all inter-agent communication. The filesystem is the only coordination mechanism:
+    </p>
+    <p>
+      <strong>Phase 1 writes</strong> <code>OPERATION-PLAN.md</code>.<br>
+      <strong>Phase 2 reads</strong> it, <strong>writes</strong> <code>DECOMPOSITION.md</code>.<br>
+      <strong>Phase 3 reads</strong> that, <strong>writes</strong> <code>ARCHITECTURE-*.md</code>.<br>
+      And so on. No agent ever reads a file that hasn't been written by a prior phase. The phase sequence guarantees ordering without explicit synchronization.
+    </p>
+    <p>
+      This means agents don't need to know about each other. A builder doesn't know how many other builders are running. It just reads its architecture file, writes its code, and produces a build report. The system handles everything else.
+    </p>
+  </section>
 
-    buildTOC();
-    initScrollSpy();
-  }
+  <!-- ═══ 8. GET STARTED ═══ -->
+  <section class="section">
+    <div class="section-num">08 Try It</div>
+    <h2>Four steps</h2>
 
-  /* ===== TABLE OF CONTENTS BUILDER ===== */
-  function buildTOC() {
-    const tocList = document.getElementById('toc-list');
-    const rendered = document.getElementById('paper-rendered');
-    const headings = rendered.querySelectorAll('h2, h3');
+    <div class="how-card cyan">
+      <div class="card-label">Step 1</div>
+      <h3>Copy the agents</h3>
+      <p>Copy <code>agents/</code> from the CommandCC repo to your project's <code>.claude/agents/</code> folder. These are the 27 pre-built agent definitions.</p>
+    </div>
 
-    if (!headings.length) return;
+    <div class="how-card green">
+      <div class="card-label">Step 2</div>
+      <h3>Pick an operation</h3>
+      <p>Copy an operation template from <code>operations/</code> to <code>.claude/commands/</code>. Start with <code>feature-deploy.md</code>, the flagship template.</p>
+    </div>
 
-    let currentSection = null;
-    let currentSubList = null;
+    <div class="how-card purple">
+      <div class="card-label">Step 3</div>
+      <h3>Write your objectives</h3>
+      <p>Edit the template. Replace the example objectives with yours. Four sentences is all you need.</p>
+    </div>
 
-    headings.forEach(function(h) {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = '#' + h.id;
-      a.textContent = h.textContent;
+    <div class="how-card cyan">
+      <div class="card-label">Step 4</div>
+      <h3>Deploy</h3>
+      <p>Run <code>claude</code>, then type <code>/feature-deploy</code>. Watch the waves execute. Read the battle map when it's done.</p>
+    </div>
+  </section>
 
-      if (h.tagName === 'H2') {
-        a.className = 'toc-section';
-        li.appendChild(a);
-        currentSubList = document.createElement('ul');
-        li.appendChild(currentSubList);
-        tocList.appendChild(li);
-        currentSection = li;
-      } else if (h.tagName === 'H3') {
-        a.className = 'toc-subsection';
-        li.appendChild(a);
-        if (currentSubList) {
-          currentSubList.appendChild(li);
-        } else {
-          tocList.appendChild(li);
-        }
-      }
-    });
-  }
+  <!-- ═══ CTA ═══ -->
+  <div class="cta-box">
+    <h2>Ready to <em>command</em>?</h2>
+    <p>Open source. Apache 2.0. Zero dependencies beyond Claude Code.</p>
+    <div class="cta-btns">
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="btn btn-cyan">View on GitHub</a>
+      <a href="whitepaper.html" class="btn btn-ghost">Read the Full Whitepaper</a>
+      <a href="/" class="btn btn-ghost">Back to Home</a>
+    </div>
+  </div>
 
-  /* ===== SCROLL SPY ===== */
-  function initScrollSpy() {
-    const rendered = document.getElementById('paper-rendered');
-    const headings = Array.from(rendered.querySelectorAll('h2, h3'));
-    const tocLinks = document.querySelectorAll('#toc-sidebar a');
+  <footer class="post-footer">
+    <p>CommandCC &middot; Apache 2.0 &middot; <a href="https://github.com/dcarranza-cc/commandcc">GitHub</a> &middot; Built by <a href="https://github.com/dcarranza-cc">AXL Protocol</a></p>
+  </footer>
 
-    if (!headings.length || !tocLinks.length) return;
-
-    const bannerHeight = document.getElementById('top-banner').offsetHeight;
-
-    function onScroll() {
-      let current = null;
-      const scrollY = window.scrollY + bannerHeight + 32;
-
-      for (let i = headings.length - 1; i >= 0; i--) {
-        if (headings[i].getBoundingClientRect().top + window.scrollY <= scrollY) {
-          current = headings[i].id;
-          break;
-        }
-      }
-
-      tocLinks.forEach(function(link) {
-        link.classList.toggle('toc-active', link.getAttribute('href') === '#' + current);
-      });
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
-
-  /* ===== COPY BUTTONS ===== */
-  function initCopyButtons() {
-    document.querySelectorAll('.cite-copy-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        const targetId = btn.getAttribute('data-target');
-        const el = document.getElementById(targetId);
-        if (!el) return;
-
-        const text = el.textContent;
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function() {
-            showCopied(btn);
-          }).catch(function() {
-            fallbackCopy(text, btn);
-          });
-        } else {
-          fallbackCopy(text, btn);
-        }
-      });
-    });
-  }
-
-  function fallbackCopy(text, btn) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    try {
-      document.execCommand('copy');
-      showCopied(btn);
-    } catch (e) { /* silent fail */ }
-    document.body.removeChild(ta);
-  }
-
-  function showCopied(btn) {
-    const original = btn.textContent;
-    btn.textContent = 'Copied';
-    btn.classList.add('copied');
-    setTimeout(function() {
-      btn.textContent = original;
-      btn.classList.remove('copied');
-    }, 2000);
-  }
-
-  /* ===== INIT ===== */
-  document.addEventListener('DOMContentLoaded', function() {
-    initCopyButtons();
-    loadPaper();
-  });
-
-})();
-</script>
+</article>
 
 </body>
 </html>
