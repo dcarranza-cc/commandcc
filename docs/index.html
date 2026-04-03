@@ -28,8 +28,20 @@
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    @font-face {
+      font-family: 'Panzer';
+      src: url('/fonts/Panzer.ttf') format('truetype');
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Panzer Condensed';
+      src: url('/fonts/Panzer-Condensed.ttf') format('truetype');
+      font-weight: 400;
+      font-display: swap;
+    }
     :root {
       --bg: #0b0c10;
       --bg2: #10111a;
@@ -50,7 +62,8 @@
       --purple: #c9a84c;
       --mono: 'JetBrains Mono', 'Consolas', monospace;
       --sans: 'Barlow', 'Inter', system-ui, sans-serif;
-      --heading: 'Oswald', 'Barlow Condensed', sans-serif;
+      --heading: 'Panzer', 'Oswald', 'Barlow Condensed', sans-serif;
+      --heading-condensed: 'Panzer Condensed', 'Panzer', sans-serif;
       --steel: #7a8ba8;
       --steel-dim: #4a5a72;
       --gold: #c9a84c;
@@ -151,120 +164,80 @@
 
     /* ═══ HERO ═══ */
     .hero {
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 100px 2rem 60px;
+      padding: 90px 2rem 40px;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(rgba(11,12,16,0.82), rgba(11,12,16,0.95)), url('/img/hero-banner.jpg') center/cover no-repeat;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(ellipse at 50% 50%, var(--cyan-glow) 0%, transparent 50%);
-      animation: pulse 8s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.05); }
-    }
-
-    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+    .hero-content { position: relative; z-index: 1; max-width: 960px; }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      font-family: var(--heading);
-      font-size: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
       color: var(--gold);
       border: 1px solid var(--cyan-dim);
-      padding: 0.3rem 1rem;
+      padding: 0.25rem 0.9rem;
       border-radius: 2px;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       letter-spacing: 3px;
       text-transform: uppercase;
     }
 
-    /* Agent Hierarchy Visual */
+    /* Agent Hierarchy Visual - LANDSCAPE */
     .hero-hierarchy {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
-      margin: 2rem 0 2.5rem;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+      flex-wrap: wrap;
     }
-    .hierarchy-row {
+    .h-group {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
-      align-items: center;
-      justify-content: center;
     }
-    .h-icon {
-      width: 44px; height: 44px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-    }
-    .h-icon:hover { transform: scale(1.1); }
-    .h-icon svg { width: 22px; height: 22px; }
-    .h-icon.commander {
-      width: 72px; height: 72px;
-      background: rgba(201,168,76,0.15);
-      border: 2px solid var(--gold);
-    }
-    .h-icon.commander svg { width: 36px; height: 36px; stroke: var(--gold); }
-    .h-icon.officer {
-      width: 52px; height: 52px;
-      background: rgba(201,168,76,0.10);
-      border: 1px solid var(--gold);
-    }
-    .h-icon.officer svg { width: 26px; height: 26px; stroke: var(--gold); }
-    .h-icon.ops {
-      background: rgba(122,139,168,0.10);
-      border: 1px solid var(--steel);
-    }
-    .h-icon.ops svg { stroke: var(--steel); }
-    .h-row-line {
-      width: 1px; height: 12px;
+    .h-group img { image-rendering: pixelated; }
+    .h-divider {
+      width: 1px;
+      height: 50px;
       background: var(--border-bright);
+      margin: 0 0.75rem;
     }
     .h-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 2px;
+      font-family: var(--heading-condensed);
+      font-size: 0.65rem;
+      letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-muted);
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
     }
 
     .hero h1 {
-      font-size: 4.5rem;
-      font-weight: 700;
-      line-height: 1.05;
-      margin-bottom: 1.5rem;
-      letter-spacing: 2px;
+      font-family: 'Panzer', var(--heading);
+      font-size: 4rem;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      letter-spacing: 6px;
       text-transform: uppercase;
     }
 
     .hero h1 .gradient {
-      background: linear-gradient(135deg, var(--gold), #d4b85c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--gold);
     }
 
-    .hero h1 .dim { color: var(--text-dim); }
+    .hero h1 .dim { color: var(--text-muted); }
 
     .hero-sub {
       font-size: 1.25rem;
@@ -868,52 +841,26 @@
     <p class="hero-sub">
       Deploy 16 to 128 AI agents in parallel from a single terminal.
       You type objectives. The system deploys a coordinated fleet.
-      You read the battle map when it's done.
     </p>
 
-    <!-- Agent Hierarchy Visual: 1 Commander > 4 Officers > 26 Operators -->
+    <!-- Agent Hierarchy: Landscape. 1 Commander | 4 Architects | 26 Operators -->
     <div class="hero-hierarchy">
-      <div class="h-label">Command</div>
-      <div class="hierarchy-row">
-        <div class="h-icon commander"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      <div class="h-label">CMD</div>
+      <div class="h-group">
+        <img src="/img/cc-80.png" width="80" height="80" alt="Commander">
       </div>
-      <div class="h-row-line"></div>
-      <div class="h-label">Architects</div>
-      <div class="hierarchy-row">
-        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      <div class="h-divider"></div>
+      <div class="h-label">ARCH</div>
+      <div class="h-group">
+        <img src="/img/cc-52.png" width="52" height="52" alt="Architect">
+        <img src="/img/cc-52.png" width="52" height="52" alt="Architect">
+        <img src="/img/cc-52.png" width="52" height="52" alt="Architect">
+        <img src="/img/cc-52.png" width="52" height="52" alt="Architect">
       </div>
-      <div class="h-row-line"></div>
-      <div class="h-label">Operators</div>
-      <div class="hierarchy-row" style="flex-wrap:wrap; max-width:600px;">
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
-        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      <div class="h-divider"></div>
+      <div class="h-label">OPS</div>
+      <div class="h-group" style="flex-wrap:wrap;max-width:500px;">
+        <img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op"><img src="/img/cc-36.png" width="36" height="36" alt="Op">
       </div>
     </div>
 
