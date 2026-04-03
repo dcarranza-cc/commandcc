@@ -1,0 +1,57 @@
+/*
+  CommandCC Design System
+  Aesthetic: German 1940s military precision, Hugo Boss elegance
+  Palette: Gunmetal grays, steel, silver, warm amber accents
+  Fonts: Oswald (headings), Barlow (body), JetBrains Mono (code)
+
+  Keep the code/terminal feeling through monospace accents,
+  terminal-green status indicators, and structured grid layouts.
+*/
+
+:root {
+  /* ═══ GRAY PALETTE: Gunmetal / Steel / Silver ═══ */
+  --bg:             #0b0c10;       /* Near-black, carbon */
+  --bg2:            #10111a;       /* Charcoal panel */
+  --surface:        #15161f;       /* Card surface */
+  --surface2:       #1a1c28;       /* Elevated surface */
+  --surface3:       #22242f;       /* Highest surface */
+  --border:         #2a2d3a;       /* Subtle border */
+  --border-bright:  #3a3d4d;       /* Emphasized border */
+
+  /* ═══ TEXT: Silver / Ash / Iron ═══ */
+  --text:           #d4d4d8;       /* Primary: silver */
+  --text-dim:       #9ca3af;       /* Secondary: ash */
+  --text-muted:     #6b7280;       /* Tertiary: iron */
+  --text-bright:    #eaeaee;       /* Headings: bright silver */
+
+  /* ═══ ACCENTS: Military ═══ */
+  --gold:           #c9a84c;       /* Command gold, officer rank */
+  --gold-dim:       #8a7235;       /* Muted gold */
+  --gold-glow:      rgba(201,168,76,0.10);
+
+  --steel:          #7a8ba8;       /* Steel blue, precision */
+  --steel-dim:      #4a5a72;       /* Muted steel */
+  --steel-glow:     rgba(122,139,168,0.08);
+
+  --green:          #5b8c5a;       /* Military olive, operational */
+  --green-bright:   #7ab87a;       /* Status green */
+  --green-glow:     rgba(91,140,90,0.10);
+
+  --red:            #b44a4a;       /* Alert red, muted */
+  --red-bright:     #d06060;       /* Error state */
+
+  --amber:          #d4a24c;       /* Warning amber */
+
+  /* ═══ TIER COLORS ═══ */
+  --opus:           #c9a84c;       /* Gold, command */
+  --opus-bg:        rgba(201,168,76,0.08);
+  --sonnet:         #7a8ba8;       /* Steel, operations */
+  --sonnet-bg:      rgba(122,139,168,0.08);
+  --haiku:          #7ab87a;       /* Olive, recon */
+  --haiku-bg:       rgba(122,184,122,0.08);
+
+  /* ═══ FONTS ═══ */
+  --heading:        'Oswald', 'Barlow Condensed', sans-serif;
+  --body:           'Barlow', 'Inter', system-ui, sans-serif;
+  --mono:           'JetBrains Mono', 'Consolas', monospace;
+}

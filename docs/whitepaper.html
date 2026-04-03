@@ -26,6 +26,9 @@
   <link rel="canonical" href="https://commandcc.ai/whitepaper.html">
   <link rel="icon" type="image/jpeg" href="/img/apple-touch-icon.jpg">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <meta name="citation_title" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
   <meta name="citation_author" content="Carranza, Diego">
   <meta name="citation_publication_date" content="2026/04">
@@ -35,16 +38,20 @@
   <meta name="citation_language" content="en">
   <style>
     :root {
-      --bg: #0a0e17;
-      --surface: #111827;
-      --border: #1e293b;
-      --text: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --accent: #22d3ee;
-      --accent-dim: #0e7490;
-      --green: #4ade80;
+      --bg: #0b0c10;
+      --surface: #15161f;
+      --border: #2a2d3a;
+      --text: #d4d4d8;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent: #c9a84c;
+      --accent-dim: #8a7235;
+      --green: #7ab87a;
       --red: #f87171;
       --yellow: #fbbf24;
+      --heading: 'Oswald', sans-serif;
+      --body: 'Barlow', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,16 +59,19 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: var(--body);
       line-height: 1.7;
     }
+
+    .icon { display: inline-flex; align-items: center; flex-shrink: 0; }
+    .icon svg { display: block; }
 
     /* Navigation */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(10, 14, 23, 0.95);
+      background: rgba(8, 9, 13, 0.97);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       z-index: 100;
@@ -78,11 +88,16 @@
     }
 
     .nav-brand {
+      font-family: var(--heading);
       font-weight: 700;
       font-size: 1.2rem;
       color: var(--accent);
       text-decoration: none;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .nav-links a {
@@ -91,6 +106,9 @@
       margin-left: 2rem;
       font-size: 0.9rem;
       transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
     }
 
     .nav-links a:hover { color: var(--accent); }
@@ -99,20 +117,22 @@
     .hero {
       padding: 120px 2rem 60px;
       text-align: center;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+      background: linear-gradient(rgba(11,12,16,0.85), rgba(11,12,16,0.95)), url('/img/hero-banner.jpg') center/cover;
       border-bottom: 1px solid var(--border);
     }
 
     .hero h1 {
+      font-family: var(--heading);
       font-size: 2.5rem;
-      font-weight: 800;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
       margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--accent), var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--accent);
     }
 
     .hero .subtitle {
+      font-family: var(--body);
       font-size: 1.1rem;
       color: var(--text-secondary);
       max-width: 700px;
@@ -135,11 +155,24 @@
 
     .stat {
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stat-icon {
+      color: var(--accent);
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .stat .number {
+      font-family: var(--mono);
       font-size: 2.5rem;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--accent);
       display: block;
     }
@@ -166,7 +199,11 @@
     }
 
     .pdf-header h2 {
+      font-family: var(--heading);
       font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
       color: var(--text);
     }
 
@@ -180,7 +217,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1.25rem;
-      border-radius: 6px;
+      border-radius: 4px;
+      font-family: var(--body);
       font-size: 0.85rem;
       font-weight: 600;
       text-decoration: none;
@@ -191,17 +229,17 @@
 
     .btn-primary {
       background: var(--accent);
-      color: var(--bg);
+      color: #0b0c10;
     }
 
     .btn-primary:hover {
-      background: var(--green);
+      background: #d4b05a;
     }
 
     .btn-outline {
       background: transparent;
       color: var(--accent);
-      border: 1px solid var(--accent-dim);
+      border: 1px solid var(--accent);
     }
 
     .btn-outline:hover {
@@ -213,7 +251,7 @@
     .paper-frame {
       background: #ffffff;
       color: #1a1a2e;
-      border-radius: 8px;
+      border-radius: 4px;
       box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
       overflow: hidden;
     }
@@ -270,7 +308,7 @@
     }
 
     .paper-content strong {
-      color: #0e7490;
+      color: #8a6a1f;
     }
 
     .paper-content code {
@@ -316,7 +354,7 @@
     }
 
     .paper-content blockquote {
-      border-left: 3px solid #0e7490;
+      border-left: 3px solid #8a6a1f;
       padding-left: 1rem;
       margin: 1rem 0;
       color: #555;
@@ -357,6 +395,9 @@
     footer a {
       color: var(--accent);
       text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
     /* Print styles for PDF generation */
@@ -419,11 +460,23 @@
 
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand">COMMANDCC</a>
+    <a href="#" class="nav-brand">
+      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2" /><path d="M11 13h4" /><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /></svg></span>
+      COMMANDCC
+    </a>
     <div class="nav-links">
-      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
-      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">Raw Markdown</a>
-      <a href="#paper">Read Paper</a>
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span>
+        GitHub
+      </a>
+      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span>
+        Raw Markdown
+      </a>
+      <a href="#paper">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></span>
+        Read Paper
+      </a>
     </div>
   </div>
 </nav>
@@ -438,18 +491,22 @@
   </p>
   <div class="stats-row">
     <div class="stat">
+      <span class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><path d="M16 3.128a4 4 0 0 1 0 7.744" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><circle cx="9" cy="7" r="4" /></svg></span>
       <span class="number">16</span>
       <span class="label">Agents Deployed</span>
     </div>
     <div class="stat">
+      <span class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5c-1.4 0-2.5-1.1-2.5-2.5V2" /><path d="M8.5 2h7" /><path d="M14.5 16h-5" /></svg></span>
       <span class="number">131</span>
       <span class="label">Tests Written</span>
     </div>
     <div class="stat">
+      <span class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg></span>
       <span class="number">13</span>
       <span class="label">Minutes Total</span>
     </div>
     <div class="stat">
+      <span class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></svg></span>
       <span class="number">200x</span>
       <span class="label">Compression</span>
     </div>
@@ -460,8 +517,14 @@
   <div class="pdf-header">
     <h2>Whitepaper</h2>
     <div class="pdf-actions">
-      <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
-      <a class="btn btn-outline" href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">View Source</a>
+      <button class="btn btn-primary" onclick="window.print()">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></svg></span>
+        Print / Save PDF
+      </button>
+      <a class="btn btn-outline" href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span>
+        View Source
+      </a>
     </div>
   </div>
 
@@ -478,7 +541,7 @@
 <footer>
   <p>
     CommandCC &middot; Apache 2.0 License &middot;
-    <a href="https://github.com/dcarranza-cc/commandcc">GitHub</a> &middot;
+    <a href="https://github.com/dcarranza-cc/commandcc"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span>GitHub</a> &middot;
     Built by AXL Protocol
   </p>
   <p style="margin-top: 0.5rem; font-size: 0.8rem;">
@@ -511,7 +574,7 @@
     }
 
     if (!md) {
-      loading.innerHTML = 'Could not load whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
+      loading.innerHTML = 'Could not load whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#c9a84c">Read it on GitHub</a>.';
       return;
     }
 
@@ -524,7 +587,7 @@
 
     container.innerHTML = marked.parse(md);
   } catch(e) {
-    loading.innerHTML = 'Error loading whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
+    loading.innerHTML = 'Error loading whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#c9a84c">Read it on GitHub</a>.';
   }
 })();
 </script>

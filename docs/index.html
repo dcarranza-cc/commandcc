@@ -28,28 +28,33 @@
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #050810;
-      --bg2: #0a0f1a;
-      --surface: #111827;
-      --surface2: #1a2332;
-      --border: #1e293b;
-      --border-bright: #334155;
-      --text: #e2e8f0;
-      --text-dim: #94a3b8;
-      --text-muted: #64748b;
-      --cyan: #22d3ee;
-      --cyan-dim: #0e7490;
-      --cyan-glow: rgba(34, 211, 238, 0.15);
-      --green: #4ade80;
-      --green-dim: #166534;
-      --yellow: #fbbf24;
-      --red: #f87171;
-      --purple: #a78bfa;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --bg: #0b0c10;
+      --bg2: #10111a;
+      --surface: #15161f;
+      --surface2: #1a1c28;
+      --border: #2a2d3a;
+      --border-bright: #3a3d4d;
+      --text: #d4d4d8;
+      --text-dim: #9ca3af;
+      --text-muted: #6b7280;
+      --cyan: #c9a84c;
+      --cyan-dim: #8a7235;
+      --cyan-glow: rgba(201, 168, 76, 0.10);
+      --green: #7ab87a;
+      --green-dim: #3d6b3d;
+      --yellow: #d4a24c;
+      --red: #b44a4a;
+      --purple: #c9a84c;
+      --mono: 'JetBrains Mono', 'Consolas', monospace;
+      --sans: 'Barlow', 'Inter', system-ui, sans-serif;
+      --heading: 'Oswald', 'Barlow Condensed', sans-serif;
+      --steel: #7a8ba8;
+      --steel-dim: #4a5a72;
+      --gold: #c9a84c;
+      --olive: #7ab87a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -63,6 +68,14 @@
       line-height: 1.6;
       overflow-x: hidden;
     }
+
+    /* ═══ ICON UTILITIES ═══ */
+    .icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+    .icon svg { display: block; }
+    .icon-sm svg { width: 14px; height: 14px; }
+    .icon-md svg { width: 18px; height: 18px; }
+    .icon-lg svg { width: 24px; height: 24px; }
+    .icon-xl svg { width: 32px; height: 32px; }
 
     /* ═══ NAV ═══ */
     nav {
@@ -86,12 +99,16 @@
     }
 
     .nav-brand {
-      font-family: var(--mono);
+      font-family: var(--heading);
       font-weight: 700;
       font-size: 1.1rem;
-      color: var(--cyan);
+      color: var(--gold);
       text-decoration: none;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .nav-brand span { color: var(--text-dim); font-weight: 400; }
@@ -109,15 +126,28 @@
     .nav-links a:hover { color: var(--cyan); }
 
     .nav-cta {
-      background: var(--cyan) !important;
+      background: var(--gold) !important;
       color: var(--bg) !important;
       padding: 0.4rem 1rem;
-      border-radius: 6px;
+      border-radius: 4px;
       font-weight: 600 !important;
-      transition: background 0.2s !important;
+      font-family: var(--heading) !important;
+      letter-spacing: 1px !important;
+      text-transform: uppercase !important;
+      font-size: 0.8rem !important;
+      transition: all 0.2s !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
     }
 
-    .nav-cta:hover { background: var(--green) !important; }
+    .nav-cta:hover { background: #d4b85c !important; }
+    .nav-cta svg { fill: var(--bg); width: 16px; height: 16px; }
+
+    /* ═══ GLOBAL HEADING OVERRIDE ═══ */
+    h1, h2, h3, h4, .section-label, .section-title, .phase-name {
+      font-family: var(--heading);
+    }
 
     /* ═══ HERO ═══ */
     .hero {
@@ -130,6 +160,7 @@
       padding: 100px 2rem 60px;
       position: relative;
       overflow: hidden;
+      background: linear-gradient(rgba(11,12,16,0.82), rgba(11,12,16,0.95)), url('/img/hero-banner.jpg') center/cover no-repeat;
     }
 
     .hero::before {
@@ -145,34 +176,90 @@
 
     @keyframes pulse {
       0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.1); }
+      50% { opacity: 0.5; transform: scale(1.05); }
     }
 
     .hero-content { position: relative; z-index: 1; max-width: 900px; }
 
     .hero-badge {
-      display: inline-block;
-      font-family: var(--mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--heading);
       font-size: 0.75rem;
-      color: var(--cyan);
+      color: var(--gold);
       border: 1px solid var(--cyan-dim);
       padding: 0.3rem 1rem;
-      border-radius: 100px;
+      border-radius: 2px;
       margin-bottom: 2rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* Agent Hierarchy Visual */
+    .hero-hierarchy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 2rem 0 2.5rem;
+    }
+    .hierarchy-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .h-icon {
+      width: 44px; height: 44px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .h-icon:hover { transform: scale(1.1); }
+    .h-icon svg { width: 22px; height: 22px; }
+    .h-icon.commander {
+      width: 72px; height: 72px;
+      background: rgba(201,168,76,0.15);
+      border: 2px solid var(--gold);
+    }
+    .h-icon.commander svg { width: 36px; height: 36px; stroke: var(--gold); }
+    .h-icon.officer {
+      width: 52px; height: 52px;
+      background: rgba(201,168,76,0.10);
+      border: 1px solid var(--gold);
+    }
+    .h-icon.officer svg { width: 26px; height: 26px; stroke: var(--gold); }
+    .h-icon.ops {
+      background: rgba(122,139,168,0.10);
+      border: 1px solid var(--steel);
+    }
+    .h-icon.ops svg { stroke: var(--steel); }
+    .h-row-line {
+      width: 1px; height: 12px;
+      background: var(--border-bright);
+    }
+    .h-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
       letter-spacing: 2px;
       text-transform: uppercase;
+      color: var(--text-muted);
     }
 
     .hero h1 {
       font-size: 4.5rem;
-      font-weight: 900;
+      font-weight: 700;
       line-height: 1.05;
       margin-bottom: 1.5rem;
-      letter-spacing: -2px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .hero h1 .gradient {
-      background: linear-gradient(135deg, var(--cyan), var(--green));
+      background: linear-gradient(135deg, var(--gold), #d4b85c);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -259,6 +346,9 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-bottom: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .section-title {
@@ -369,6 +459,9 @@
     .phase-name {
       font-weight: 600;
       font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .phase-tier {
@@ -431,6 +524,10 @@
     .tier-card.sonnet:hover { border-color: var(--cyan); }
     .tier-card.haiku { border-top: 3px solid var(--green); }
     .tier-card.haiku:hover { border-color: var(--green); }
+
+    .tier-icon {
+      margin-bottom: 1rem;
+    }
 
     .tier-card h3 {
       font-family: var(--mono);
@@ -495,6 +592,9 @@
       font-size: 0.9rem;
       color: var(--cyan);
       margin-bottom: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .op-card p {
@@ -596,6 +696,12 @@
 
     .proof-section .container { text-align: center; }
 
+    .proof-title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
     .proof-table {
       margin: 3rem auto 0;
       max-width: 500px;
@@ -674,6 +780,13 @@
       justify-content: center;
       gap: 2rem;
       margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .footer-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
     }
 
     /* ═══ RESPONSIVE ═══ */
@@ -723,14 +836,20 @@
 <!-- ═══ NAV ═══ -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand">COMMANDCC <span>v0.1</span></a>
+    <a href="#" class="nav-brand">
+      <span class="icon icon-md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2" /><path d="M11 13h4" /><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /></svg></span>
+      COMMANDCC <span>v0.1</span>
+    </a>
     <div class="nav-links">
       <a href="#how">How It Works</a>
       <a href="#agents">Agents</a>
       <a href="#operations">Operations</a>
       <a href="paper.html">Paper</a>
       <a href="whitepaper.html">Whitepaper</a>
-      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="nav-cta">GitHub</a>
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="nav-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
     </div>
   </div>
 </nav>
@@ -738,7 +857,10 @@
 <!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">Open Source / Apache 2.0</div>
+    <div class="hero-badge">
+      <span class="icon icon-md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></svg></span>
+      Open Source / Apache 2.0
+    </div>
     <h1>
       <span class="gradient">Command</span> Claude Code.<br>
       <span class="dim">Conquer.</span>
@@ -748,6 +870,53 @@
       You type objectives. The system deploys a coordinated fleet.
       You read the battle map when it's done.
     </p>
+
+    <!-- Agent Hierarchy Visual: 1 Commander > 4 Officers > 26 Operators -->
+    <div class="hero-hierarchy">
+      <div class="h-label">Command</div>
+      <div class="hierarchy-row">
+        <div class="h-icon commander"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      </div>
+      <div class="h-row-line"></div>
+      <div class="h-label">Architects</div>
+      <div class="hierarchy-row">
+        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon officer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      </div>
+      <div class="h-row-line"></div>
+      <div class="h-label">Operators</div>
+      <div class="hierarchy-row" style="flex-wrap:wrap; max-width:600px;">
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+        <div class="h-icon ops"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg></div>
+      </div>
+    </div>
+
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="num">16</span>
@@ -777,7 +946,10 @@
 <!-- ═══ TERMINAL DEMO ═══ -->
 <section class="terminal-section">
   <div class="container">
-    <div class="section-label">See It In Action</div>
+    <div class="section-label">
+      <span class="icon icon-md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19h8" /><path d="m4 17 6-6-6-6" /></svg></span>
+      See It In Action
+    </div>
     <div class="section-title">One command. Sixteen agents.</div>
     <div class="section-desc">You type four objectives. The system does the rest.</div>
 
@@ -847,55 +1019,82 @@
     <div class="phase-grid">
       <div class="phase-row">
         <span class="phase-num">Phase 0</span>
-        <span class="phase-name">Recon</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--green)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" /><path d="M4 6h.01" /><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" /><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" /><path d="M12 18h.01" /><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" /><circle cx="12" cy="12" r="2" /><path d="m13.41 10.59 5.66-5.66" /></svg></span>
+          Recon
+        </span>
         <span class="phase-tier tier-haiku">HAIKU</span>
         <span class="phase-time">30s</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 1</span>
-        <span class="phase-name">Strategy</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--purple)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18V5" /><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /><path d="M18 18a4 4 0 0 0 2-7.464" /><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /><path d="M6 18a4 4 0 0 1-2-7.464" /><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></svg></span>
+          Strategy
+        </span>
         <span class="phase-tier tier-opus">OPUS</span>
         <span class="phase-time">2m</span>
       </div>
       <div class="phase-row highlight">
         <span class="phase-num">Phase 2</span>
-        <span class="phase-name">Decompose (THE MULTIPLIER)</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg></span>
+          Decompose (THE MULTIPLIER)
+        </span>
         <span class="phase-tier tier-opus">OPUS</span>
         <span class="phase-time">2m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 3</span>
-        <span class="phase-name">Architecture</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--purple)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22V7a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 0 0-1-1H2" /><rect x="14" y="2" width="8" height="8" rx="1" /></svg></span>
+          Architecture
+        </span>
         <span class="phase-tier tier-opus">OPUS</span>
         <span class="phase-time">3m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 4</span>
-        <span class="phase-name">Build</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9" /><path d="m18 15 4-4" /><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5" /></svg></span>
+          Build
+        </span>
         <span class="phase-tier tier-sonnet">SONNET</span>
         <span class="phase-time">5m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 5</span>
-        <span class="phase-name">Wire</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z" /><path d="M17 21v-2" /><path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10" /><path d="M21 21v-2" /><path d="M3 5V3" /><path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z" /><path d="M7 5V3" /></svg></span>
+          Wire
+        </span>
         <span class="phase-tier tier-sonnet">SONNET</span>
         <span class="phase-time">3m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 6</span>
-        <span class="phase-name">Test</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5c-1.4 0-2.5-1.1-2.5-2.5V2" /><path d="M8.5 2h7" /><path d="M14.5 16h-5" /></svg></span>
+          Test
+        </span>
         <span class="phase-tier tier-sonnet">SONNET</span>
         <span class="phase-time">3m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 7</span>
-        <span class="phase-name">Review</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--purple)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="m9 15 2 2 4-4" /></svg></span>
+          Review
+        </span>
         <span class="phase-tier tier-opus">OPUS</span>
         <span class="phase-time">2m</span>
       </div>
       <div class="phase-row">
         <span class="phase-num">Phase 8</span>
-        <span class="phase-name">Integration</span>
+        <span class="phase-name">
+          <span class="icon icon-sm" style="color:var(--purple)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></svg></span>
+          Integration
+        </span>
         <span class="phase-tier tier-opus">OPUS</span>
         <span class="phase-time">2m</span>
       </div>
@@ -961,6 +1160,9 @@
 
     <div class="tier-cards">
       <div class="tier-card opus">
+        <div class="tier-icon" style="color:var(--purple)">
+          <span class="icon icon-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18V5" /><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /><path d="M18 18a4 4 0 0 0 2-7.464" /><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /><path d="M6 18a4 4 0 0 1-2-7.464" /><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></svg></span>
+        </div>
         <h3>Tier 1: Command</h3>
         <h4>Opus, Think</h4>
         <p>Strategic agents. Read-only. Never write code. See the big picture, make architectural decisions.</p>
@@ -976,6 +1178,9 @@
       </div>
 
       <div class="tier-card sonnet">
+        <div class="tier-icon" style="color:var(--cyan)">
+          <span class="icon icon-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></svg></span>
+        </div>
         <h3>Tier 2: Operations</h3>
         <h4>Sonnet, Build</h4>
         <p>Implementation agents. Full permissions. The workhorse. Deep execution on focused tasks.</p>
@@ -991,6 +1196,9 @@
       </div>
 
       <div class="tier-card haiku">
+        <div class="tier-icon" style="color:var(--green)">
+          <span class="icon icon-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg></span>
+        </div>
         <h3>Tier 3: Recon</h3>
         <h4>Haiku, Scan</h4>
         <p>Fast scouts. Read-only. Quick in, quick out. Cheap and expendable. Use liberally.</p>
@@ -1016,42 +1224,66 @@
 
     <div class="ops-grid">
       <div class="op-card">
-        <h4>/feature-deploy</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></svg></span>
+          /feature-deploy
+        </h4>
         <p>Deploy N features in parallel with full test coverage. The flagship OPBLITZ pattern.</p>
         <div class="op-meta">9 phases, full octopus, decomposer included</div>
       </div>
       <div class="op-card">
-        <h4>/security-audit</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg></span>
+          /security-audit
+        </h4>
         <p>Full security sweep. OWASP checks, dependency audit, attack surface mapping.</p>
         <div class="op-meta">6 phases, severity-rated output</div>
       </div>
       <div class="op-card">
-        <h4>/codebase-migration</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2" /><path d="M7 11v4a2 2 0 0 0 2 2h4" /><rect width="8" height="8" x="13" y="13" rx="2" /></svg></span>
+          /codebase-migration
+        </h4>
         <p>Migrate between frameworks or versions. Scan, transform, verify per module.</p>
         <div class="op-meta">7 phases, per-module parallel transforms</div>
       </div>
       <div class="op-card">
-        <h4>/test-blitz</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5c-1.4 0-2.5-1.1-2.5-2.5V2" /><path d="M8.5 2h7" /><path d="M14.5 16h-5" /></svg></span>
+          /test-blitz
+        </h4>
         <p>Write comprehensive tests for the entire codebase. One tester per module.</p>
         <div class="op-meta">5 phases, coverage-tracked</div>
       </div>
       <div class="op-card">
-        <h4>/refactor-sweep</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /><circle cx="12" cy="12" r="3" /></svg></span>
+          /refactor-sweep
+        </h4>
         <p>Refactor N modules simultaneously. Identify smells, transform, verify.</p>
         <div class="op-meta">6 phases, regression-verified</div>
       </div>
       <div class="op-card">
-        <h4>/incident-response</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg></span>
+          /incident-response
+        </h4>
         <p>FAST TRACK. Diagnose + fix production incidents. 8 scouts simultaneous.</p>
         <div class="op-meta">5 phases, skips arch + wire for speed</div>
       </div>
       <div class="op-card">
-        <h4>/documentation-sprint</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></span>
+          /documentation-sprint
+        </h4>
         <p>Document everything in parallel. One writer per module.</p>
         <div class="op-meta">5 phases, accuracy-checked</div>
       </div>
       <div class="op-card">
-        <h4>/research-sprint</h4>
+        <h4>
+          <span class="icon icon-md" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>
+          /research-sprint
+        </h4>
         <p>Research N topics in parallel, synthesize findings into one report.</p>
         <div class="op-meta">4 phases, non-code operations</div>
       </div>
@@ -1063,7 +1295,12 @@
 <section class="proof-section" id="proof">
   <div class="container">
     <div class="section-label">Validated</div>
-    <div class="section-title">Operation OPBLITZ3</div>
+    <div class="section-title">
+      <span class="proof-title-row">
+        <span class="icon icon-lg" style="color:var(--cyan)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526" /><circle cx="12" cy="8" r="6" /></svg></span>
+        Operation OPBLITZ3
+      </span>
+    </div>
     <p class="section-desc" style="margin: 0 auto 1rem; text-align: center;">
       The first field deployment. One operator, 16 agents, 4 features, 13 minutes.
     </p>
@@ -1111,9 +1348,18 @@
     <h2>Ready to <span class="gradient">command</span>?</h2>
     <p>Open source. Zero dependencies beyond Claude Code. Copy the agents, pick an operation, deploy.</p>
     <div class="cta-buttons">
-      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="btn btn-primary">View on GitHub</a>
-      <a href="whitepaper.html" class="btn btn-ghost">Read the Whitepaper</a>
-      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/BATTLE-MAP-OPBLITZ3.md" target="_blank" class="btn btn-ghost">View Battle Map</a>
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank" class="btn btn-primary">
+        <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span>
+        View on GitHub
+      </a>
+      <a href="whitepaper.html" class="btn btn-ghost">
+        <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span>
+        Read the Whitepaper
+      </a>
+      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/BATTLE-MAP-OPBLITZ3.md" target="_blank" class="btn btn-ghost">
+        <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /></svg></span>
+        View Battle Map
+      </a>
     </div>
   </div>
 </section>
@@ -1121,10 +1367,22 @@
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-links">
-    <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
-    <a href="whitepaper.html">Whitepaper</a>
-    <a href="https://github.com/dcarranza-cc/commandcc/blob/main/docs/getting-started.md" target="_blank">Docs</a>
-    <a href="https://github.com/dcarranza-cc/commandcc/releases" target="_blank">Releases</a>
+    <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">
+      <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span>
+      GitHub
+    </a>
+    <a href="whitepaper.html">
+      <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span>
+      Whitepaper
+    </a>
+    <a href="https://github.com/dcarranza-cc/commandcc/blob/main/docs/getting-started.md" target="_blank">
+      <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></span>
+      Docs
+    </a>
+    <a href="https://github.com/dcarranza-cc/commandcc/releases" target="_blank">
+      <span class="icon icon-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /><path d="M12 22V12" /><polyline points="3.29 7 12 12 20.71 7" /><path d="m7.5 4.27 9 5.15" /></svg></span>
+      Releases
+    </a>
   </div>
   <p>CommandCC &middot; Apache 2.0 &middot; Built by <a href="https://github.com/dcarranza-cc" target="_blank">AXL Protocol</a></p>
 </footer>
