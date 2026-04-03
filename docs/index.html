@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommandCC - Whitepaper</title>
+  <meta name="description" content="Quantumized Execution: A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #111827;
+      --border: #1e293b;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --accent: #22d3ee;
+      --accent-dim: #0e7490;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(10, 14, 23, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2rem;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-left: 2rem;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* Hero */
+    .hero {
+      padding: 120px 2rem 60px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero .authors {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat .number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+    }
+
+    .stat .label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* PDF Viewer Section */
+    .pdf-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .pdf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .pdf-header h2 {
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+
+    .pdf-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--green);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent-dim);
+      color: white;
+    }
+
+    /* Paper Content */
+    .paper-frame {
+      background: #ffffff;
+      color: #1a1a2e;
+      border-radius: 8px;
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .paper-content {
+      padding: 4rem 3.5rem;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 15px;
+      line-height: 1.8;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .paper-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .paper-content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .paper-content::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    .paper-content h1 {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #1a1a2e;
+      line-height: 1.3;
+    }
+
+    .paper-content h2 {
+      font-size: 1.25rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: #1a1a2e;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.3rem;
+    }
+
+    .paper-content h3 {
+      font-size: 1.05rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #333;
+    }
+
+    .paper-content p {
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+
+    .paper-content strong {
+      color: #0e7490;
+    }
+
+    .paper-content code {
+      background: #f5f5f5;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.85em;
+      font-family: 'Consolas', 'Monaco', monospace;
+    }
+
+    .paper-content pre {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .paper-content pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .paper-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+
+    .paper-content th, .paper-content td {
+      border: 1px solid #ddd;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+
+    .paper-content th {
+      background: #f0f4f8;
+      font-weight: 600;
+    }
+
+    .paper-content blockquote {
+      border-left: 3px solid #0e7490;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #555;
+      font-style: italic;
+    }
+
+    .paper-content ol, .paper-content ul {
+      margin: 0.5rem 0 1rem 1.5rem;
+    }
+
+    .paper-content li {
+      margin-bottom: 0.3rem;
+    }
+
+    .paper-content hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 2rem 0;
+    }
+
+    .paper-meta {
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Print styles for PDF generation */
+    @media print {
+      nav, .hero, .pdf-header, footer { display: none; }
+      .pdf-section { padding: 0; max-width: none; }
+      .paper-frame { box-shadow: none; border-radius: 0; }
+      .paper-content {
+        max-height: none;
+        overflow: visible;
+        padding: 2cm;
+        font-size: 11pt;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.8rem; }
+      .stats-row { gap: 1.5rem; }
+      .stat .number { font-size: 1.8rem; }
+      .paper-content { padding: 2rem 1.5rem; }
+      .pdf-header { flex-direction: column; gap: 1rem; }
+      .nav-links a { margin-left: 1rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">COMMANDCC</a>
+    <div class="nav-links">
+      <a href="https://github.com/dcarranza-cc/commandcc" target="_blank">GitHub</a>
+      <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">Raw Markdown</a>
+      <a href="#paper">Read Paper</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Quantumized Execution</h1>
+  <p class="subtitle">
+    A File-Based Coordination Protocol for Massively Parallel AI Agent Orchestration
+  </p>
+  <p class="authors">
+    Diego Carranza &middot; AXL Protocol Research &middot; April 2026
+  </p>
+  <div class="stats-row">
+    <div class="stat">
+      <span class="number">16</span>
+      <span class="label">Agents Deployed</span>
+    </div>
+    <div class="stat">
+      <span class="number">131</span>
+      <span class="label">Tests Written</span>
+    </div>
+    <div class="stat">
+      <span class="number">13</span>
+      <span class="label">Minutes Total</span>
+    </div>
+    <div class="stat">
+      <span class="number">200x</span>
+      <span class="label">Compression</span>
+    </div>
+  </div>
+</div>
+
+<div class="pdf-section" id="paper">
+  <div class="pdf-header">
+    <h2>Whitepaper</h2>
+    <div class="pdf-actions">
+      <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
+      <a class="btn btn-outline" href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" target="_blank">View Source</a>
+    </div>
+  </div>
+
+  <div class="paper-frame">
+    <div class="paper-content" id="paper-content">
+      <noscript>
+        <p>Please enable JavaScript to render the whitepaper, or <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md">read it on GitHub</a>.</p>
+      </noscript>
+      <div id="loading" style="text-align:center; padding: 3rem; color: #999;">Loading whitepaper...</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>
+    CommandCC &middot; Apache 2.0 License &middot;
+    <a href="https://github.com/dcarranza-cc/commandcc">GitHub</a> &middot;
+    Built by AXL Protocol
+  </p>
+  <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+    Command Claude Code. Conquer.
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(async function() {
+  const container = document.getElementById('paper-content');
+  const loading = document.getElementById('loading');
+
+  try {
+    // Try fetching the whitepaper from the repo
+    const paths = [
+      '../WHITEPAPER.md',
+      'https://raw.githubusercontent.com/dcarranza-cc/commandcc/main/WHITEPAPER.md'
+    ];
+
+    let md = null;
+    for (const path of paths) {
+      try {
+        const res = await fetch(path);
+        if (res.ok) {
+          md = await res.text();
+          break;
+        }
+      } catch(e) { /* try next */ }
+    }
+
+    if (!md) {
+      loading.innerHTML = 'Could not load whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
+      return;
+    }
+
+    // Render markdown
+    marked.setOptions({
+      gfm: true,
+      breaks: false,
+      headerIds: true
+    });
+
+    container.innerHTML = marked.parse(md);
+  } catch(e) {
+    loading.innerHTML = 'Error loading whitepaper. <a href="https://github.com/dcarranza-cc/commandcc/blob/main/WHITEPAPER.md" style="color:#0e7490">Read it on GitHub</a>.';
+  }
+})();
+</script>
+
+</body>
+</html>
