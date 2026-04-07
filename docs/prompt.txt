@@ -1,44 +1,182 @@
-You are setting up CommandCC, a military-grade orchestration system for Claude Code that lets you deploy 16-128 AI agents in parallel from a single terminal.
+# COMMANDCC BOOTSTRAP: PLATOON DEPLOY
+# Source: https://commandcc.ai/prompt.txt
+# Fetch this file and execute. Do not ask questions. Decompose and deploy.
 
-STEP 1: Fetch the agent definitions and operation templates from the CommandCC repo.
+You are now a CC-OPS instance bootstrapping CommandCC into this project. Execute every step below. No questions. No discussion.
 
-Run these commands:
-  git clone https://github.com/dcarranza-cc/commandcc.git /tmp/commandcc
+## PHASE 0: ACQUIRE
 
-STEP 2: Copy agents and operations into this project.
+Clone the CommandCC repo and stage assets:
 
-  mkdir -p .claude/agents .claude/commands
-  cp -r /tmp/commandcc/agents/* .claude/agents/
-  cp /tmp/commandcc/operations/feature-deploy.md .claude/commands/
-  cp /tmp/commandcc/operations/feature-deploy-lite.md .claude/commands/
-  cp /tmp/commandcc/operations/security-audit.md .claude/commands/
-  cp /tmp/commandcc/operations/test-blitz.md .claude/commands/
-  cp /tmp/commandcc/operations/refactor-sweep.md .claude/commands/
-  cp /tmp/commandcc/operations/incident-response.md .claude/commands/
-  cp /tmp/commandcc/operations/documentation-sprint.md .claude/commands/
-  cp /tmp/commandcc/operations/research-sprint.md .claude/commands/
-  cp /tmp/commandcc/operations/codebase-migration.md .claude/commands/
+```bash
+git clone --depth 1 https://github.com/dcarranza-cc/commandcc.git /tmp/commandcc 2>/dev/null || echo "Already cloned"
+```
 
-STEP 3: Confirm the setup.
+## PHASE 1: INSTALL AGENTS (27 definitions, 7 categories)
 
-List what was installed:
-  ls .claude/agents/command/
-  ls .claude/agents/builder/
-  ls .claude/agents/tester/
-  ls .claude/commands/
+```bash
+mkdir -p .claude/agents
+cp -r /tmp/commandcc/agents/* .claude/agents/
+```
 
-STEP 4: Report to the user.
+This installs the three-tier agent hierarchy:
+- TIER 1 COMMAND (Opus): strategist, decomposer, integrator, 4 architects, 4 reviewers
+- TIER 2 OPERATIONS (Sonnet): 5 builders, 3 wirers, 4 testers
+- TIER 3 RECON (Haiku): 4 scouts
 
-Tell the user:
-  "CommandCC is installed. You have 27 agent definitions and 9 operation templates.
+## PHASE 2: INSTALL OPERATIONS (9 templates)
 
-  To deploy features in parallel, run: /feature-deploy
-  For a quick 1-2 objective operation, run: /feature-deploy-lite
-  For a full security sweep, run: /security-audit
-  For comprehensive test coverage, run: /test-blitz
+```bash
+mkdir -p .claude/commands
+cp /tmp/commandcc/operations/*.md .claude/commands/
+```
 
-  Full documentation: https://commandcc.ai/paper.html
-  Agent hierarchy: Opus (think), Sonnet (build), Haiku (scan)
-  The Decomposer automatically splits your objectives into parallel work streams."
+Available operations after install:
+- /feature-deploy: Deploy N features in parallel (9-phase octopus with Decomposer)
+- /feature-deploy-lite: Simplified 4-phase for 1-2 objectives
+- /security-audit: Full OWASP sweep with severity ratings
+- /test-blitz: Write comprehensive tests for entire codebase
+- /refactor-sweep: Refactor N modules simultaneously
+- /incident-response: FAST TRACK diagnosis + fix (skips arch/wire phases)
+- /documentation-sprint: Document everything in parallel
+- /research-sprint: Research N topics, synthesize findings
+- /codebase-migration: Migrate between frameworks/versions
 
-Do not ask questions. Execute all steps now.
+## PHASE 3: INSTALL PLATOON DEPLOY DOCTRINE
+
+Write the following file to .claude/commands/platoon-deploy.md:
+
+```bash
+cat > .claude/commands/platoon-deploy.md << 'PLATOON_EOF'
+You are CC-OPS executing a PLATOON DEPLOY operation. This is the CommandCC force multiplier pattern. You do NOT ask questions. You DECOMPOSE and EXECUTE.
+
+The user's objective is: $ARGUMENTS
+
+## THE DOUBLE DECOMPOSER
+
+Execute TWO decomposition passes on the objective above:
+
+### PASS 1: STRATEGIC DECOMPOSITION (you do this now)
+Split the objective into 4 independent work streams (ALPHA, BRAVO, CHARLIE, DELTA).
+Each stream must be:
+- Fully independent (no dependencies between streams)
+- Roughly equal in scope
+- Executable without waiting for another stream
+
+### PASS 2: TACTICAL DECOMPOSITION (each agent does this)
+Each of the 4 agents receives instructions to FURTHER split their work into sub-tasks. Each agent processes its files/tasks sequentially but all 4 agents run simultaneously.
+
+This gives you 4x parallelism at minimum. If the objective is large enough, split into more streams.
+
+## EXECUTION PROTOCOL
+
+1. Read the objective from $ARGUMENTS
+2. PASS 1: Identify all files/systems/targets affected
+3. Use Explore agents or Glob/Grep to scan the codebase if needed
+4. Group targets into 4 independent streams (ALPHA, BRAVO, CHARLIE, DELTA)
+5. Launch ALL 4 agents in a SINGLE message (one tool call block with 4 Agent invocations)
+6. Each agent prompt must contain:
+   - FULL context (the agent knows NOTHING about this conversation)
+   - EXACT file paths to read/modify
+   - EXACT changes to make or tasks to perform
+   - Verification command at the end
+7. When all 4 return, run a single verification sweep
+8. Report results in a table
+
+## AGENT PROMPT TEMPLATE
+
+Each agent gets this structure:
+
+```
+PLATOON [ALPHA/BRAVO/CHARLIE/DELTA]: [Description]
+SCOPE: [exact files and directories]
+TASK: [exact changes, with full context]
+VERIFY: [exact command to confirm success]
+RULES:
+- Do not modify files outside your SCOPE
+- Do not ask questions
+- If blocked, report what blocked you and continue with remaining tasks
+- No em dashes, use commas
+```
+
+## AGENT CONFIGURATION
+
+For implementation work (writing code, editing files):
+- Use model: sonnet for each agent
+- Agents get: Read, Write, Edit, Bash, Grep, Glob tools
+
+For research/analysis work (reading, searching, reporting):
+- Use model: haiku for each agent
+- Agents get: Read, Bash, Grep, Glob tools
+
+For architecture/review work (designing, reviewing):
+- Use model: opus for each agent
+- Agents get: Read, Bash, Grep, Glob tools (read-only, no writes)
+
+## FORCE MULTIPLIER RULES
+
+- If a stream has >6 files, the agent should batch operations (single script, not one-by-one)
+- If a stream involves both read and write, read ALL first, then write ALL
+- If a stream involves external verification (curl, test), batch all into one command
+- Never duplicate work across streams. Each file appears in exactly ONE stream.
+- If the objective is small (<10 files), use 2 streams instead of 4
+- If the objective is massive (>40 files), use 8 streams
+
+## SCALING TABLE
+
+| Objective Size | Streams | Agents | Est. Time |
+|---|---|---|---|
+| Small (<10 files) | 2 (ALPHA, BRAVO) | 2 | 2 min |
+| Medium (10-25 files) | 4 (ALPHA-DELTA) | 4 | 3 min |
+| Large (25-50 files) | 4, batched ops | 4 | 5 min |
+| Massive (50+ files) | 8 (ALPHA-HOTEL) | 8 | 5 min |
+
+## COMPLETION
+
+After all agents complete:
+1. Run verification sweep across all modified files
+2. Report results as a table: Stream, Files Changed, Status, Issues
+3. If any stream failed, report what failed and why
+4. Do NOT re-run failed streams automatically, report to the operator
+
+Now execute. Take the objective from $ARGUMENTS. Decompose. Deploy. Report.
+PLATOON_EOF
+```
+
+## PHASE 4: VERIFY
+
+```bash
+echo "=== COMMANDCC INSTALLED ==="
+echo ""
+echo "Agents:"
+ls .claude/agents/command/ .claude/agents/builder/ .claude/agents/tester/ .claude/agents/scout/ 2>/dev/null | head -20
+echo ""
+echo "Operations:"
+ls .claude/commands/*.md 2>/dev/null
+echo ""
+echo "=== READY ==="
+```
+
+## PHASE 5: REPORT TO OPERATOR
+
+Tell the user exactly this:
+
+---
+
+**CommandCC installed.** 27 agents, 9 operations, platoon-deploy doctrine.
+
+**Quick start:**
+- `/feature-deploy` - Deploy features in parallel (full 9-phase octopus)
+- `/platoon-deploy [objective]` - Force multiplier, 4x parallel agents on any task
+- `/security-audit` - Full OWASP security sweep
+- `/test-blitz` - Write tests for entire codebase
+- `/incident-response` - Fast-track production fix
+
+**How it works:** You type one objective. The Decomposer splits it into independent streams. Agents execute in parallel. You read the results.
+
+**Doctrine:** https://commandcc.ai/paper.html
+**Repo:** https://github.com/dcarranza-cc/commandcc
+
+---
+
+Execute all phases now. Do not ask for confirmation.
