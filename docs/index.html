@@ -89,7 +89,53 @@
     .hero-stat { text-align: center; }
     .hero-stat .num { font-family: var(--mono); font-size: 3rem; font-weight: 700; color: var(--gold); display: block; line-height: 1; }
     .hero-stat .lbl { font-family: var(--sans); font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 3px; margin-top: 0.5rem; }
-    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+
+    /* PROMPT DROPDOWN */
+    .prompt-drop { max-width: 720px; margin: 0 auto; text-align: left; }
+    .prompt-toggle {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      width: 100%; padding: 0.6rem 1.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px; cursor: pointer;
+      font-family: var(--heading); font-size: 0.8rem; font-weight: 400;
+      color: var(--gold); letter-spacing: 3px; text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .prompt-toggle:hover { border-color: var(--gold); background: var(--surface2); }
+    .prompt-toggle .chevron { transition: transform 0.3s; font-size: 0.7rem; }
+    .prompt-drop.open .prompt-toggle .chevron { transform: rotate(180deg); }
+    .prompt-panel {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+      border: 1px solid var(--border); border-top: none; border-radius: 0 0 4px 4px;
+      background: var(--surface);
+    }
+    .prompt-drop.open .prompt-panel { max-height: 600px; }
+    .prompt-inner { padding: 1.5rem; }
+    .prompt-inner p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem; line-height: 1.6; }
+    .prompt-inner p strong { color: var(--text); }
+    .prompt-code {
+      position: relative; background: #0d1117; border: 1px solid #21262d;
+      border-radius: 4px; padding: 1.25rem; margin-bottom: 1rem;
+      font-family: var(--mono); font-size: 0.78rem; line-height: 1.7;
+      color: #c9d1d9; white-space: pre-wrap; word-break: break-word;
+    }
+    .prompt-copy {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      background: var(--gold); color: var(--bg); border: none;
+      padding: 0.3rem 0.7rem; border-radius: 2px; cursor: pointer;
+      font-family: var(--heading); font-size: 0.65rem; letter-spacing: 2px;
+      text-transform: uppercase; transition: background 0.2s;
+    }
+    .prompt-copy:hover { background: var(--amber); }
+    .prompt-copy.copied { background: var(--green-bright); }
+    .prompt-or { text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin: 1rem 0; letter-spacing: 2px; }
+    .prompt-oneliner {
+      background: #0d1117; border: 1px solid #21262d; border-radius: 4px;
+      padding: 0.75rem 1rem; font-family: var(--mono); font-size: 0.78rem;
+      color: var(--gold); position: relative;
+    }
+    .prompt-oneliner .prompt-copy { top: 0.35rem; }
 
     /* BUTTONS */
     .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.6rem; border-radius: 2px; font-family: var(--heading); font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; }
@@ -388,8 +434,43 @@
         See the Proof
       </a>
     </div>
+
+    <!-- PROMPT IT DROPDOWN -->
+    <div class="prompt-drop" id="promptDrop">
+      <button class="prompt-toggle" onclick="document.getElementById('promptDrop').classList.toggle('open')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 11 2-2-2-2"/><path d="M11 13h4"/><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg>
+        Prompt It
+        <span class="chevron">&#9660;</span>
+      </button>
+      <div class="prompt-panel">
+        <div class="prompt-inner">
+          <p>Paste this into <strong>Claude Code</strong> to install CommandCC in your project. It fetches the agents, operation templates, and sets everything up automatically.</p>
+
+          <div class="prompt-code" id="mainPrompt">Fetch https://commandcc.ai/prompt.txt and execute every instruction in it. Do not ask questions, just run it. This will install CommandCC agent definitions and operation templates into this project. After setup, show me what operations are available.<button class="prompt-copy" onclick="copyPrompt('mainPrompt',this)">Copy</button></div>
+
+          <div class="prompt-or">or use the one-liner</div>
+
+          <div class="prompt-oneliner" id="oneLiner">claude -p "$(curl -s https://commandcc.ai/prompt.txt)"<button class="prompt-copy" onclick="copyPrompt('oneLiner',this)">Copy</button></div>
+
+          <p style="margin-top:1rem;font-size:0.78rem;color:var(--text-muted);">After install, run <strong style="color:var(--gold);">/feature-deploy</strong> to deploy features in parallel, or <strong style="color:var(--gold);">/security-audit</strong> for a full security sweep. All 9 operation templates will be available as slash commands.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<script>
+function copyPrompt(id, btn) {
+  const el = document.getElementById(id);
+  const text = el.innerText.replace('Copy','').replace('Copied','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
 
 <!-- TERMINAL DEMO -->
 <section class="terminal-section">

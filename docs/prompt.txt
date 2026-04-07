@@ -1,0 +1,44 @@
+You are setting up CommandCC, a military-grade orchestration system for Claude Code that lets you deploy 16-128 AI agents in parallel from a single terminal.
+
+STEP 1: Fetch the agent definitions and operation templates from the CommandCC repo.
+
+Run these commands:
+  git clone https://github.com/dcarranza-cc/commandcc.git /tmp/commandcc
+
+STEP 2: Copy agents and operations into this project.
+
+  mkdir -p .claude/agents .claude/commands
+  cp -r /tmp/commandcc/agents/* .claude/agents/
+  cp /tmp/commandcc/operations/feature-deploy.md .claude/commands/
+  cp /tmp/commandcc/operations/feature-deploy-lite.md .claude/commands/
+  cp /tmp/commandcc/operations/security-audit.md .claude/commands/
+  cp /tmp/commandcc/operations/test-blitz.md .claude/commands/
+  cp /tmp/commandcc/operations/refactor-sweep.md .claude/commands/
+  cp /tmp/commandcc/operations/incident-response.md .claude/commands/
+  cp /tmp/commandcc/operations/documentation-sprint.md .claude/commands/
+  cp /tmp/commandcc/operations/research-sprint.md .claude/commands/
+  cp /tmp/commandcc/operations/codebase-migration.md .claude/commands/
+
+STEP 3: Confirm the setup.
+
+List what was installed:
+  ls .claude/agents/command/
+  ls .claude/agents/builder/
+  ls .claude/agents/tester/
+  ls .claude/commands/
+
+STEP 4: Report to the user.
+
+Tell the user:
+  "CommandCC is installed. You have 27 agent definitions and 9 operation templates.
+
+  To deploy features in parallel, run: /feature-deploy
+  For a quick 1-2 objective operation, run: /feature-deploy-lite
+  For a full security sweep, run: /security-audit
+  For comprehensive test coverage, run: /test-blitz
+
+  Full documentation: https://commandcc.ai/paper.html
+  Agent hierarchy: Opus (think), Sonnet (build), Haiku (scan)
+  The Decomposer automatically splits your objectives into parallel work streams."
+
+Do not ask questions. Execute all steps now.
