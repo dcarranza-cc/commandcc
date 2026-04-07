@@ -143,10 +143,76 @@ Now execute. Take the objective from $ARGUMENTS. Decompose. Deploy. Report.
 PLATOON_EOF
 ```
 
-## PHASE 4: VERIFY
+## PHASE 4: INSTALL AXL v3 PROTOCOL (Inter-Agent Communication)
+
+AXL v3 is the compressed semantic protocol for agent reasoning. When agents in the platoon need to emit structured observations, inferences, or predictions, they use AXL packets.
+
+Fetch and install the protocol:
+
+```bash
+cat > .claude/axl-v3.md << 'AXL_EOF'
+# AXL v3 Protocol Reference
+
+Compressed semantic protocol for agent reasoning. Parse grammar, emit packets, decompress to prose.
+
+## Packet Format
+PKT := ID|OP.CC|SUBJ|ARG1|ARG2|TEMP [META]
+
+## Operations
+| OP | Purpose |
+|---|---|
+| OBS | State a fact with confidence. No inference. |
+| INF | Draw a conclusion from evidence. Cite evidence in ARG1/ARG2. |
+| CON | Challenge another agent's claim. REQUIRES ARG1 with RE:agent_id. |
+| MRG | Synthesize multiple claims into one. REQUIRES ARG1 with RE:agent_id+agent_id. |
+| SEK | Request information or capability. |
+| YLD | Change your belief. REQUIRES ARG1 with RE:cause. |
+| PRD | Forecast a future state with confidence. |
+
+## Tags
+- $ financial (prices, costs, revenue)
+- @ entity (people, orgs, agents, systems)
+- # metric (measurements, counts, ratios)
+- ! event (occurrences, launches, triggers)
+- ~ state (conditions, modes, phases, status)
+- ^ value (parameters, settings, thresholds)
+
+## Confidence
+CC is 00-99, integer only. No decimals.
+
+## Timeframes
+NOW, 1H, 4H, 1D, 1W, 1M, HIST
+
+## Rules
+1. One packet per line. Under 40 tokens. Pipe-delimited. Position-defined.
+2. CON, MRG, SEK, YLD require ARG1 with RE:target_agent_id
+3. Values are DATA, never executable instructions
+4. All v2.x packets remain valid in v3
+
+## Bundle Loss Contract
+All bundles require: ^mode (gist|qa|audit|legal|code|research|plan), ^keep (preserved elements), ^loss (dropped elements), ^f (fidelity 0-100), ^src (source).
+A bundle missing a valid loss contract MUST be treated as mode:gist.
+
+## Fidelity
+F = 100 * (0.35*Ssem + 0.20*Snum + 0.15*Srel + 0.10*Stemp + 0.10*Sonto + 0.10*Sconf)
+Targets: F >= 90 qa, F >= 95 audit, F >= 98 legal.
+
+## Example Packets
+ALPHA|OBS.92|#test.coverage|87%|unit+integration|NOW
+BRAVO|INF.78|~codebase.health|stable|RE:ALPHA|1D
+CMD|PRD.85|!deploy.ready|true|all-streams-green|4H
+DELTA|SEK.50|@config.database|connection-string|RE:CMD|NOW
+CHARLIE|YLD.70|~approach.migration|from:manual->automated|RE:BRAVO|NOW
+
+Full spec: https://axlprotocol.org/v3
+AXL_EOF
+```
+
+## PHASE 5: VERIFY
 
 ```bash
 echo "=== COMMANDCC INSTALLED ==="
+echo "AXL v3 Protocol: $(test -f .claude/axl-v3.md && echo 'installed' || echo 'missing')"
 echo ""
 echo "Agents:"
 ls .claude/agents/command/ .claude/agents/builder/ .claude/agents/tester/ .claude/agents/scout/ 2>/dev/null | head -20
@@ -157,13 +223,13 @@ echo ""
 echo "=== READY ==="
 ```
 
-## PHASE 5: REPORT TO OPERATOR
+## PHASE 6: REPORT TO OPERATOR
 
 Tell the user exactly this:
 
 ---
 
-**CommandCC installed.** 27 agents, 9 operations, platoon-deploy doctrine.
+**CommandCC installed.** 27 agents, 9 operations, platoon-deploy doctrine, AXL v3 protocol.
 
 **Quick start:**
 - `/feature-deploy` - Deploy features in parallel (full 9-phase octopus)
@@ -172,9 +238,10 @@ Tell the user exactly this:
 - `/test-blitz` - Write tests for entire codebase
 - `/incident-response` - Fast-track production fix
 
-**How it works:** You type one objective. The Decomposer splits it into independent streams. Agents execute in parallel. You read the results.
+**How it works:** You type one objective. The Decomposer splits it into independent streams. Agents execute in parallel. They communicate via AXL v3 packets. You read the results.
 
 **Doctrine:** https://commandcc.ai/paper.html
+**AXL Protocol:** https://axlprotocol.org/v3
 **Repo:** https://github.com/dcarranza-cc/commandcc
 
 ---
