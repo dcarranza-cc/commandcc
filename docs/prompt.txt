@@ -93,14 +93,13 @@ Each subagent receives its stream and FURTHER splits internally into sub-tasks. 
 
 ## SCALING RULES
 
-| Objective Size | Callsigns | Waves | Est. Time |
+| Tier | Callsigns | Waves | When |
 |---|---|---|---|
-| Tiny (<5 files) | 2 (ALPHA, BRAVO) | 1 | 1 min |
-| Small (5-10 files) | 4 (ALPHA-DELTA) | 1 | 2 min |
-| Medium (10-25 files) | 8 (ALPHA-HOTEL) | 1 | 3 min |
-| Large (25-50 files) | 10 (ALPHA-JULIETT) | 1 | 5 min |
-| Major (50-100 files) | 16 (ALPHA-PAPA) | 2 waves | 7 min |
-| Massive (100+ files) | 26 (ALPHA-ZULU) | 3 waves | 10 min |
+| SMALL | 6 (ALPHA-FOXTROT) | 1 | Standard operations, focused scope |
+| MEDIUM | 12 (ALPHA-LIMA) | 2 | Multi-module work, broad changes |
+| BLITZ | 26 (ALPHA-ZULU) | 3 | Full-scale assault, maximum parallelism |
+
+Default to SMALL. Escalate to MEDIUM when the objective spans multiple systems. Go BLITZ when the operator says so or the objective is massive.
 
 ## EXECUTION PROTOCOL
 
