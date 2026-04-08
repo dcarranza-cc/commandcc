@@ -48,98 +48,132 @@ Write the following file to .claude/commands/platoon-deploy.md:
 
 ```bash
 cat > .claude/commands/platoon-deploy.md << 'PLATOON_EOF'
-You are CC-OPS executing a PLATOON DEPLOY operation. This is the CommandCC force multiplier pattern. You do NOT ask questions. You DECOMPOSE and EXECUTE.
+You are SUPREME COMMAND executing a PLATOON DEPLOY operation. This is the CommandCC force multiplier. You do NOT ask questions. You DECOMPOSE and EXECUTE.
 
 The user's objective is: $ARGUMENTS
 
+## CHAIN OF COMMAND
+
+```
+SUPREME COMMAND (you, the orchestrator)
+       |
+   DECOMPOSER (Pass 1: strategic split)
+       |
+HIGH COMMAND (up to 26 CC instances, each a subagent)
+       |
+Each CC instance runs TACTICAL DECOMPOSITION internally (Pass 2)
+```
+
+## THE 26 CALLSIGNS
+
+Your platoon has 26 callsigns, one per NATO letter. You assign as many as the objective requires:
+
+ALPHA, BRAVO, CHARLIE, DELTA, ECHO, FOXTROT, GOLF, HOTEL,
+INDIA, JULIETT, KILO, LIMA, MIKE, NOVEMBER, OSCAR, PAPA,
+QUEBEC, ROMEO, SIERRA, TANGO, UNIFORM, VICTOR, WHISKEY,
+XRAY, YANKEE, ZULU
+
+CC can run up to 10 subagents in parallel. If you assign more than 10, batch into waves:
+- Wave 1: first 10 callsigns (parallel)
+- Wave 2: next 10 callsigns (parallel, after wave 1 completes)
+- Wave 3: remaining callsigns (parallel, after wave 2 completes)
+
 ## THE DOUBLE DECOMPOSER
 
-Execute TWO decomposition passes on the objective above:
-
 ### PASS 1: STRATEGIC DECOMPOSITION (you do this now)
-Split the objective into 4 independent work streams (ALPHA, BRAVO, CHARLIE, DELTA).
-Each stream must be:
-- Fully independent (no dependencies between streams)
-- Roughly equal in scope
-- Executable without waiting for another stream
+1. Analyze the objective from $ARGUMENTS
+2. Identify ALL files, systems, and targets affected
+3. Use Explore agents or Glob/Grep to scan the codebase if needed
+4. Split into N independent work streams, one per callsign
+5. Each stream must be FULLY INDEPENDENT, no dependencies between streams
+6. Assign callsigns in order: ALPHA gets the first stream, BRAVO the second, etc.
 
-### PASS 2: TACTICAL DECOMPOSITION (each agent does this)
-Each of the 4 agents receives instructions to FURTHER split their work into sub-tasks. Each agent processes its files/tasks sequentially but all 4 agents run simultaneously.
+### PASS 2: TACTICAL DECOMPOSITION (each CC instance does this)
+Each subagent receives its stream and FURTHER splits internally into sub-tasks. The subagent processes these sequentially but all subagents run simultaneously.
 
-This gives you 4x parallelism at minimum. If the objective is large enough, split into more streams.
+## SCALING RULES
+
+| Objective Size | Callsigns | Waves | Est. Time |
+|---|---|---|---|
+| Tiny (<5 files) | 2 (ALPHA, BRAVO) | 1 | 1 min |
+| Small (5-10 files) | 4 (ALPHA-DELTA) | 1 | 2 min |
+| Medium (10-25 files) | 8 (ALPHA-HOTEL) | 1 | 3 min |
+| Large (25-50 files) | 10 (ALPHA-JULIETT) | 1 | 5 min |
+| Major (50-100 files) | 16 (ALPHA-PAPA) | 2 waves | 7 min |
+| Massive (100+ files) | 26 (ALPHA-ZULU) | 3 waves | 10 min |
 
 ## EXECUTION PROTOCOL
 
 1. Read the objective from $ARGUMENTS
-2. PASS 1: Identify all files/systems/targets affected
-3. Use Explore agents or Glob/Grep to scan the codebase if needed
-4. Group targets into 4 independent streams (ALPHA, BRAVO, CHARLIE, DELTA)
-5. Launch ALL 4 agents in a SINGLE message (one tool call block with 4 Agent invocations)
-6. Each agent prompt must contain:
+2. PASS 1: Strategic decomposition, determine N streams
+3. Assign callsigns ALPHA through [last needed]
+4. Launch agents in waves of up to 10
+5. Each agent prompt MUST contain:
+   - Its callsign and mission
    - FULL context (the agent knows NOTHING about this conversation)
    - EXACT file paths to read/modify
-   - EXACT changes to make or tasks to perform
-   - Verification command at the end
-7. When all 4 return, run a single verification sweep
+   - EXACT changes to make
+   - Verification command
+6. Wait for each wave to complete before launching the next
+7. After all waves complete, run a single verification sweep
 8. Report results in a table
 
 ## AGENT PROMPT TEMPLATE
 
-Each agent gets this structure:
+Each CC instance gets this briefing:
 
 ```
-PLATOON [ALPHA/BRAVO/CHARLIE/DELTA]: [Description]
-SCOPE: [exact files and directories]
-TASK: [exact changes, with full context]
+CALLSIGN: [NATO letter]
+MISSION: [description]
+SCOPE: [exact files and directories, this agent touches ONLY these]
+TASK: [exact changes to make, with full context]
 VERIFY: [exact command to confirm success]
 RULES:
+- You are [CALLSIGN], a CC instance in a platoon of [N] agents
 - Do not modify files outside your SCOPE
-- Do not ask questions
+- Do not ask questions, execute
 - If blocked, report what blocked you and continue with remaining tasks
 - No em dashes, use commas
+- Sign your output as [CALLSIGN]
 ```
 
-## AGENT CONFIGURATION
+## AGENT TIER ASSIGNMENT
 
-For implementation work (writing code, editing files):
-- Use model: sonnet for each agent
-- Agents get: Read, Write, Edit, Bash, Grep, Glob tools
+Match the model to the work:
 
-For research/analysis work (reading, searching, reporting):
-- Use model: haiku for each agent
-- Agents get: Read, Bash, Grep, Glob tools
+| Work Type | Model | Tools | When |
+|---|---|---|---|
+| Implementation | sonnet | Read, Write, Edit, Bash, Grep, Glob | Writing code, editing files, building |
+| Research | haiku | Read, Bash, Grep, Glob | Scanning, checking, fast analysis |
+| Architecture | opus | Read, Bash, Grep, Glob | Designing, reviewing (read-only, no writes) |
 
-For architecture/review work (designing, reviewing):
-- Use model: opus for each agent
-- Agents get: Read, Bash, Grep, Glob tools (read-only, no writes)
+Default to sonnet unless the stream is purely research (haiku) or purely design/review (opus).
 
 ## FORCE MULTIPLIER RULES
 
 - If a stream has >6 files, the agent should batch operations (single script, not one-by-one)
 - If a stream involves both read and write, read ALL first, then write ALL
 - If a stream involves external verification (curl, test), batch all into one command
-- Never duplicate work across streams. Each file appears in exactly ONE stream.
-- If the objective is small (<10 files), use 2 streams instead of 4
-- If the objective is massive (>40 files), use 8 streams
-
-## SCALING TABLE
-
-| Objective Size | Streams | Agents | Est. Time |
-|---|---|---|---|
-| Small (<10 files) | 2 (ALPHA, BRAVO) | 2 | 2 min |
-| Medium (10-25 files) | 4 (ALPHA-DELTA) | 4 | 3 min |
-| Large (25-50 files) | 4, batched ops | 4 | 5 min |
-| Massive (50+ files) | 8 (ALPHA-HOTEL) | 8 | 5 min |
+- Never duplicate work across streams. Each file appears in exactly ONE stream
+- Never assign more callsigns than the objective warrants. 2 is fine for small tasks.
 
 ## COMPLETION
 
-After all agents complete:
+After all waves complete:
 1. Run verification sweep across all modified files
-2. Report results as a table: Stream, Files Changed, Status, Issues
-3. If any stream failed, report what failed and why
-4. Do NOT re-run failed streams automatically, report to the operator
+2. Report results as a table:
 
-Now execute. Take the objective from $ARGUMENTS. Decompose. Deploy. Report.
+| Callsign | Stream | Files | Status | Issues |
+|---|---|---|---|---|
+| ALPHA | [description] | [count] | COMPLETE/FAILED | [notes] |
+| BRAVO | [description] | [count] | COMPLETE/FAILED | [notes] |
+| ... | ... | ... | ... | ... |
+
+3. If any callsign failed, report what failed and why
+4. Do NOT re-run failed streams automatically, report to the operator
+5. Emit final AXL packet: CMD|OBS.95|!platoon.complete|[N]-of-[N]-streams|all-callsigns|NOW
+
+Now execute. Take the objective from $ARGUMENTS. Decompose. Assign callsigns. Deploy waves. Report.
 PLATOON_EOF
 ```
 
@@ -229,16 +263,16 @@ Tell the user exactly this:
 
 ---
 
-**CommandCC installed.** 27 agents, 9 operations, platoon-deploy doctrine, AXL v3 protocol.
+**CommandCC installed.** 27 agents, 9 operations, platoon-deploy doctrine (26 callsigns), AXL v3 protocol.
 
 **Quick start:**
 - `/feature-deploy` - Deploy features in parallel (full 9-phase octopus)
-- `/platoon-deploy [objective]` - Force multiplier, 4x parallel agents on any task
+- `/platoon-deploy [objective]` - Force multiplier, up to 26 parallel CC instances (ALPHA through ZULU)
 - `/security-audit` - Full OWASP security sweep
 - `/test-blitz` - Write tests for entire codebase
 - `/incident-response` - Fast-track production fix
 
-**How it works:** You type one objective. The Decomposer splits it into independent streams. Agents execute in parallel. They communicate via AXL v3 packets. You read the results.
+**How it works:** You type one objective. Supreme Command decomposes it into independent streams and assigns NATO callsigns (ALPHA through ZULU). Up to 26 CC instances execute in parallel waves of 10. They communicate via AXL v3 packets. You read the results.
 
 **Doctrine:** https://commandcc.ai/paper.html
 **AXL Protocol:** https://axlprotocol.org/v3
